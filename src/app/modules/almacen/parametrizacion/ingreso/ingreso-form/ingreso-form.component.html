@@ -1,0 +1,185 @@
+<h3 mat-dialog-title>
+    <b>{{labelForm}} - Ingreso de Material</b>
+</h3>
+
+<div mat-dialog-content>
+    <form [formGroup]="formRegistro" class="row">
+        <!-- Selección de Almacén -->
+        <div class="col-md-4 col-sm-12 mb-3">
+            <mat-form-field class="w-100" appearance="fill">
+                <mat-label>Almacén</mat-label>
+                <mat-icon matPrefix>store</mat-icon>
+                <mat-select formControlName="almacen" (selectionChange)="onAlmacenChange($event)">
+                    @for(a of dataAlmacen; track a.id){
+                    <mat-option [value]="a.id">{{a.nombre}} ({{a.sigla}})</mat-option>
+                    }
+                </mat-select>
+                @if(formRegistro.get('almacen')?.hasError('required') && formRegistro.get('almacen')?.touched){
+                <mat-error>Seleccione un almacén</mat-error>
+                }
+            </mat-form-field>
+        </div>
+
+        <!-- Selección de Subalmacén -->
+        <div class="col-md-4 col-sm-12 mb-3">
+            <mat-form-field class="w-100" appearance="fill">
+                <mat-label>Subalmacén (opcional)</mat-label>
+                <mat-icon matPrefix>storefront</mat-icon>
+                <mat-select formControlName="subalmacen">
+                    <mat-option [value]="null">-- Ninguno --</mat-option>
+                    @for(sa of dataSubAlmacen; track sa.id){
+                    <mat-option [value]="sa.id">{{sa.nombre}} ({{sa.sigla}})</mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
+        </div>
+
+        <!-- Selección de Proveedor -->
+        <div class="col-md-4 col-sm-12 mb-3">
+            <mat-form-field class="w-100" appearance="fill">
+                <mat-label>Proveedor</mat-label>
+                <mat-icon matPrefix>business</mat-icon>
+                <mat-select formControlName="proveedor">
+                    @for(p of dataProveedor; track p.id){
+                    <mat-option [value]="p.id">{{p.razon_social}} ({{p.nit}})</mat-option>
+                    }
+                </mat-select>
+                @if(formRegistro.get('proveedor')?.hasError('required') && formRegistro.get('proveedor')?.touched){
+                <mat-error>Seleccione un proveedor</mat-error>
+                }
+            </mat-form-field>
+        </div>
+
+        <!-- Código Comprobante -->
+        <div class="col-md-6 col-sm-12 mb-3">
+            <mat-form-field class="w-100" appearance="fill">
+                <mat-label>N° Comprobante</mat-label>
+                <mat-icon matPrefix>receipt</mat-icon>
+                <input matInput formControlName="comprobante" placeholder="FACT-001-2026"> @if(formRegistro.get('comprobante')?.hasError('required') && formRegistro.get('comprobante')?.touched){
+                <mat-error>Comprobante requerido</mat-error>
+                }
+            </mat-form-field>
+        </div>
+
+        <!-- Fecha de Ingreso -->
+        <div class="col-md-6 col-sm-12 mb-3">
+            <mat-form-field class="w-100" appearance="fill">
+                <mat-label>Fecha de Ingreso</mat-label>
+                <mat-icon matPrefix>calendar_today</mat-icon>
+                <input matInput [matDatepicker]="picker" formControlName="fecha_ingreso">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+                @if(formRegistro.get('fecha_ingreso')?.hasError('required')){
+                <mat-error>Fecha requerida</mat-error>
+                }
+            </mat-form-field>
+        </div>
+
+        <!-- Descripción -->
+        <div class="col-12 mb-3">
+            <mat-form-field class="w-100" appearance="fill">
+                <mat-label>Descripción del Ingreso</mat-label>
+                <mat-icon matPrefix>description</mat-icon>
+                <textarea matInput formControlName="descripcion" rows="2" placeholder="Descripción detallada del ingreso"></textarea> @if(formRegistro.get('descripcion')?.hasError('required') && formRegistro.get('descripcion')?.touched){
+                <mat-error>Descripción requerida</mat-error>
+                } @if(formRegistro.get('descripcion')?.hasError('minlength')){
+                <mat-error>Mínimo 5 caracteres</mat-error>
+                }
+            </mat-form-field>
+        </div>
+
+        <!-- Sección de Detalles -->
+        <div class="col-12 mt-2">
+            <h5 class="text-primary">
+                <i class="ti ti-list me-2"></i> Productos del Ingreso
+            </h5>
+            <hr class="separator">
+        </div>
+
+        <!-- Lista de detalles -->
+        <div formArrayName="detalles" class="col-12">
+            <div *ngFor="let detalle of detallesArray.controls; let i = index" [formGroupName]="i" class="detalle-row mb-2 p-2" [class.bg-light]="i % 2 === 0">
+
+                <div class="row align-items-center">
+                    <!-- Producto -->
+                    <div class="col-md-5 col-sm-12">
+                        <mat-form-field class="w-100" appearance="fill">
+                            <mat-label>Producto</mat-label>
+                            <mat-icon matPrefix>inventory</mat-icon>
+                            <mat-select formControlName="producto" (selectionChange)="onProductoSeleccionado($event)">
+                                @for(p of dataProductos; track p.id){
+                                <mat-option [value]="p.id">{{p.codigo}} - {{p.nombre}}</mat-option>
+                                }
+                            </mat-select>
+                            @if(detalle.get('producto')?.hasError('required')){
+                            <mat-error>Seleccione un producto</mat-error>
+                            }
+                        </mat-form-field>
+                    </div>
+
+                    <!-- Cantidad -->
+                    <div class="col-md-2 col-sm-6">
+                        <mat-form-field class="w-200" appearance="fill">
+                            <mat-label>Cantidad</mat-label>
+                            <mat-icon matPrefix>numbers</mat-icon>
+                            <input matInput type="number" formControlName="cantidad" step="0.01" min="0.01"> @if(detalle.get('cantidad')?.hasError('required')){
+                            <mat-error>Requerido</mat-error>
+                            } @if(detalle.get('cantidad')?.hasError('min')){
+                            <mat-error>Mínimo 0.01</mat-error>
+                            }
+                        </mat-form-field>
+                    </div>
+
+                    <!-- Precio Unitario -->
+                    <div class="col-md-2 col-sm-6">
+                        <mat-form-field class="w-100" appearance="fill">
+                            <mat-label>Precio Unitario</mat-label>
+                            <mat-icon matPrefix>attach_money</mat-icon>
+                            <input matInput type="number" formControlName="precio_unitario" step="0.01" min="0.01"> @if(detalle.get('precio_unitario')?.hasError('required')){
+                            <mat-error>Requerido</mat-error>
+                            } @if(detalle.get('precio_unitario')?.hasError('min')){
+                            <mat-error>Mínimo 0.01</mat-error>
+                            }
+                        </mat-form-field>
+                    </div>
+
+                    <!-- Subtotal -->
+                    <div class="col-md-2 col-sm-6 text-center">
+                        <strong>Subtotal:</strong><br> {{ calcularSubtotal(detalle.get('cantidad')?.value || 0, detalle.get('precio_unitario')?.value || 0) | currency:'Bs.' }}
+                    </div>
+
+                    <!-- Botón eliminar -->
+                    <div class="col-md-1 col-sm-6 text-center">
+                        <button type="button" mat-icon-button color="warn" (click)="eliminarDetalle(i)" matTooltip="Eliminar producto">
+                            <i class="ti ti-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Botón agregar producto -->
+        <div class="col-12 text-center mt-2">
+            <button type="button" mat-button class="btn btn-outline-success btn-round" (click)="agregarDetalleFormulario()">
+                <i class="ti ti-plus"></i> Agregar Producto
+            </button>
+        </div>
+
+        <!-- Total del Ingreso -->
+        <div class="col-12 mt-3 text-end">
+            <h4 class="mb-0">
+                <strong>TOTAL:</strong>
+                <span class="text-primary">{{ calcularTotal() | currency:'Bs.' }}</span>
+            </h4>
+        </div>
+    </form>
+</div>
+
+<div mat-dialog-actions align="end" class="px-3 pb-3">
+    <button type="button" mat-button class="btn btn-secondary btn-round" (click)="accionCancel()">
+        <i class="ti ti-x"></i> Cancelar
+    </button>
+    <button type="button" mat-button class="btn btn-primary btn-round ms-2" (click)="accionRegistrar()" [disabled]="formRegistro.invalid || detallesArray.length === 0">
+        <i class="ti ti-send"></i> {{labelForm}}
+    </button>
+</div>

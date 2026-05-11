@@ -1,0 +1,56 @@
+<h3 mat-dialog-title>
+    <b>{{ labelForm }} Almacén</b>
+</h3>
+
+<div mat-dialog-content>
+    <form [formGroup]="formRegistro" class="row">
+        <div class="col-12 mb-3">
+            <mat-form-field class="w-100" appearance="fill">
+                <mat-label>Nombre del Almacén</mat-label>
+                <mat-icon matPrefix>warehouse</mat-icon>
+                <input matInput formControlName="nombre" placeholder="Ej: Almacén Central"> @if (formRegistro.get('nombre')?.hasError('required') && formRegistro.get('nombre')?.touched) {
+                <mat-error>El nombre es requerido</mat-error>
+                } @if (formRegistro.get('nombre')?.hasError('minlength')) {
+                <mat-error>Mínimo 3 caracteres</mat-error>
+                } @if (formRegistro.get('nombre')?.hasError('maxlength')) {
+                <mat-error>Máximo 100 caracteres</mat-error>
+                }
+            </mat-form-field>
+        </div>
+
+        <div class="col-12 mb-3">
+            <mat-form-field class="w-100" appearance="fill">
+                <mat-label>Sigla</mat-label>
+                <mat-icon matPrefix>tag</mat-icon>
+                <input matInput formControlName="sigla" placeholder="Ej: ALC"> @if (formRegistro.get('sigla')?.hasError('required') && formRegistro.get('sigla')?.touched) {
+                <mat-error>La sigla es requerida</mat-error>
+                } @if (formRegistro.get('sigla')?.hasError('minlength')) {
+                <mat-error>Mínimo 2 caracteres</mat-error>
+                } @if (formRegistro.get('sigla')?.hasError('maxlength')) {
+                <mat-error>Máximo 20 caracteres</mat-error>
+                }
+            </mat-form-field>
+        </div>
+
+        <div class="col-12 mb-3">
+            <mat-form-field class="w-100" appearance="fill">
+                <mat-label>Ubicación (opcional)</mat-label>
+                <mat-icon matPrefix>location_on</mat-icon>
+                <input matInput formControlName="ubicacion" placeholder="Ej: Av. Principal #123">
+            </mat-form-field>
+        </div>
+
+        <div class="col-12 mb-3">
+            <mat-checkbox formControlName="activo">Activo</mat-checkbox>
+        </div>
+    </form>
+</div>
+
+<div mat-dialog-actions align="end" class="px-3 pb-3">
+    <button type="button" mat-button class="btn btn-secondary btn-round" (click)="accionCancel()">
+        <i class="ti ti-x"></i> Cancelar
+    </button>
+    <button type="button" mat-button class="btn btn-primary btn-round ms-2" (click)="accionRegistrar()" [disabled]="formRegistro.invalid">
+        <i class="ti ti-send"></i> {{ labelForm }}
+    </button>
+</div>
