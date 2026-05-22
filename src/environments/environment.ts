@@ -1,7 +1,9 @@
 export const environment = {
     production: false,
     apiUrl: 'http://127.0.0.1:8000/api',
- 
+
+    mediaUrl: 'http://127.0.0.1:8000/media',
+
     // Clave de encriptación - Diferente para cada entorno
     encryptionKey: 'DevSecretKey2024!@#$%',
     // Configuración de seguridad

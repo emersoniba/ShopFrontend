@@ -27,7 +27,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 //
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card'; // <-- añadir
-import { MatButtonModule } from '@angular/material/button'; // si usas botones de Material
+import { ImageRendererComponent } from './modules/almacen/bandejas/imagen-render/image-renderer.component';
 // ...otros imports...
 
 @NgModule({
@@ -74,5 +74,6 @@ import { MatButtonModule } from '@angular/material/button'; // si usas botones d
             multi: true
         }
     ]
+
 })
 export class AppModule { }

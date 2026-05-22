@@ -36,7 +36,6 @@ export class PersonalFormComponent implements OnInit, OnDestroy {
     ) {
         this.modoEdicion = !!data?.id;
         this.labelForm = this.modoEdicion ? 'Actualizar' : 'Registrar';
-        
         this.formRegistro = this.fb.group({
             // Datos de Persona
             ci: ['', [Validators.required, Validators.minLength(5)]],
@@ -221,6 +220,7 @@ export class PersonalFormComponent implements OnInit, OnDestroy {
     actualizarUsuario() {
         // Actualizar persona
         const datosPersona = {
+            ci: this.formRegistro.get('ci')?.value,
             nombres: this.formRegistro.get('nombres')?.value,
             apellido_paterno: this.formRegistro.get('apellido_paterno')?.value,
             apellido_materno: this.formRegistro.get('apellido_materno')?.value,

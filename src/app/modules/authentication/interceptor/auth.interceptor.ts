@@ -39,7 +39,7 @@ export class AuthInterceptor implements HttpInterceptor {
                 newReq = req.clone({
                     setHeaders: {
                         Authorization: `Bearer ${token}`,
-                        'Content-Type': 'application/json'
+                        //'Content-Type': 'application/json'
                     }
                 });
             }

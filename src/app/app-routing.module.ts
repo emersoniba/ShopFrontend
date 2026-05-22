@@ -3,20 +3,10 @@ import { RouterModule, Routes } from '@angular/router';
 
 import LoginComponent from './modules/authentication/login/login.component';
 import { AdminComponent } from './theme/layouts/admin/admin.component';
-import { ProveedorComponent } from './modules/almacen/parametrizacion/proveedor/proveedor.component';
-import { AlmacenComponent } from './modules/almacen/parametrizacion/almacen/almacen.component';
-import { SolicitanteComponent } from './modules/almacen/bandejas/solicitante/solicitante.component';
-import { CategoriaComponent } from './modules/almacen/parametrizacion/categoria/categoria.component';
-import { MaterialComponent } from './modules/almacen/parametrizacion/material/material.component';
-import { ResponsableComponent } from './modules/almacen/parametrizacion/responsable/responsable.component';
 import { AuthGuard } from './modules/authentication/guard/auth.guard';
-import { IngresoComponent } from './modules/almacen/parametrizacion/ingreso/ingreso.component';
-import { AprobadorComponent } from './modules/almacen/bandejas/aprobador/aprobador.component';
-import { RecepcionadorComponent } from './modules/almacen/bandejas/recepcionador/recepcionador.component';
-import { EntregaProductosComponent } from './modules/almacen/bandejas/recepcionador/entrega-productos/entrega-productos.component';
-import { AtendidasComponent } from './modules/almacen/bandejas/atendidas/atendidas.component';
-import { ReportesComponent } from './modules/almacen/reportes/reportes.component';
 import { PersonalComponent } from './modules/almacen/personal/personal.component';
+import { MaterialComponent } from './modules/almacen/parametrizacion/material/material.component';
+//import { ShopComponent } from './modules/shop/shop.component';
 
 const routes: Routes = [
 	{
@@ -40,76 +30,10 @@ const routes: Routes = [
 				data: { roles: ['SuperAdmin', 'AdminTienda', 'Cajero'] }
 			},
 			{
-				path: 'categorias-producto',
-				component: CategoriaComponent,
-				canActivate: [AuthGuard],
-				data: { roles: ['SuperAdmin', 'Almacenero'] }
-			},
-			{
-				path: 'proveedor',
-				component: ProveedorComponent,
-				//canActivate: [AuthGuard, ],
-				data: { roles: ['Almacenero'] }
-			},
-			{
-				path: 'almacen',
-				component: AlmacenComponent,
-				canActivate: [AuthGuard],
-				data: { roles: ['SuperAdmin', 'Almacenero'] }
-			},
-			{
-				path: 'responsable',
-				component: ResponsableComponent,
-				canActivate: [AuthGuard],
-				data: { roles: ['SuperAdmin', 'Almacenero'] }
-			},
-			{
 				path: 'material',
 				component: MaterialComponent,
 				canActivate: [AuthGuard],
-				data: { roles: ['SuperAdmin', 'Almacenero'] }
-			},
-			{
-				path: 'ingreso',
-				component: IngresoComponent,
-				canActivate: [AuthGuard],
-				data: { roles: ['SuperAdmin', 'Almacenero'] }
-			},
-			{
-				path: 'solicitud',
-				component: SolicitanteComponent,
-				canActivate: [AuthGuard],
-				data: { roles: ['SuperAdmin', 'Solicitante'] }
-			},
-			{
-				path: 'aprobar',
-				component: AprobadorComponent,
-				canActivate: [AuthGuard],
-				data: { roles: ['SuperAdmin', 'Aprobador'] }
-			},
-			{
-				path: 'recepcionar',
-				component: RecepcionadorComponent,
-				canActivate: [AuthGuard],
-				data: { roles: ['SuperAdmin', 'Almacenero'] }
-			},
-			{
-				path: 'entrega-productos/:id',
-				component: EntregaProductosComponent,
-				canActivate: [AuthGuard],
-				data: { roles: ['SuperAdmin', 'Almacenero'] }
-			},
-			{
-				path: 'atender',
-				component: AtendidasComponent,
-				canActivate: [AuthGuard],
-				data: { roles: ['SuperAdmin', 'Almacenero'] }
-			},
-			{
-				path: 'reporte',
-				component: ReportesComponent,
-				canActivate: [AuthGuard],
-				data: { roles: ['SuperAdmin', 'Almacenero'] }
+				data: { roles: ['SuperAdmin', 'AdminTienda', 'Cajero'] }
 			}
 		]
 	},
