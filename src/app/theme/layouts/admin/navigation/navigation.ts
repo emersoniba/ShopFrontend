@@ -30,7 +30,7 @@ export const NavigationItems: NavigationItem[] = [
 				title: 'Default',
 				type: 'item',
 				classes: 'nav-item',
-				url: '/dashboard/default',
+				url: '/admin/dashboard/default',
 				icon: 'ti ti-dashboard',
 				breadcrumbs: false
 			}
@@ -47,7 +47,7 @@ export const NavigationItems: NavigationItem[] = [
 				title: 'Usuarios',
 				type: 'item',
 				classes: 'nav-item',
-				url: '/usuario',
+				url: '/admin/usuario',
 				icon: 'ti ti-user',
 				target: false,
 				breadcrumbs: true,
@@ -66,7 +66,7 @@ export const NavigationItems: NavigationItem[] = [
 				title: 'Materiales',
 				type: 'item',
 				classes: 'nav-item',
-				url: '/material',
+				url: '/admin/material',
 				icon: 'ti ti-template',
 				target: false,
 				breadcrumbs: true,

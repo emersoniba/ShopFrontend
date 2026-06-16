@@ -1,16 +1,15 @@
 export const environment = {
-    production: false,
-    apiUrl: 'http://127.0.0.1:8000/api',
+  production: false,
 
-    mediaUrl: 'http://127.0.0.1:8000/media',
+  apiUrl: 'http://localhost:8000/api',
 
-    // Clave de encriptación - Diferente para cada entorno
-    encryptionKey: 'DevSecretKey2024!@#$%',
-    // Configuración de seguridad
-    security: {
-        encryptUserData: true,  // Encriptar datos del usuario
-        encryptTokens: true,    // Encriptar tokens
-        logLevel: 'debug'
-    }
+  mediaUrl: 'http://localhost:8000/media',
 
+  encryptionKey: 'DevSecretKey2024!@#$%',
+
+  security: {
+    encryptUserData: true,
+    encryptTokens: true,
+    logLevel: 'debug'
+  }
 };

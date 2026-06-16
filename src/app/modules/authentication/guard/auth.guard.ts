@@ -15,29 +15,30 @@ export class AuthGuard implements CanActivate {
     ) {}
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-
+        // Verificar si el usuario está autenticado
         if (!this.authService.verificarToken()) {
-
             this.toastr.warning(
-                'Su sesión ha expirado. Por favor inicie sesión nuevamente.',
-                'Sesión expirada'
+                'Debe iniciar sesión para acceder a esta página',
+                'Acceso denegado'
             );
-
-            this.authService.logout();
             this.router.navigate(['/login']);
-
             return false;
         }
 
+        // Si no hay roles requeridos, permitir acceso
         const requiredRoles = route.data['roles'] as string[];
+        if (!requiredRoles || requiredRoles.length === 0) {
+            return true;
+        }
 
-        if (requiredRoles && requiredRoles.length > 0) {
-            const hasRole = this.authService.hasAnyRole(requiredRoles);
-
-            if (!hasRole) {
-                this.router.navigate(['/dashboard/default']);
-                return false;
-            }
+        // Verificar roles
+        const hasRole = this.authService.hasAnyRole(requiredRoles);
+        
+        if (!hasRole) {
+            this.toastr.error('No tiene permisos para acceder a esta sección', 'Acceso denegado');
+            // Redirigir al dashboard del admin (no a tienda)
+            this.router.navigate(['/admin/dashboard/default']);
+            return false;
         }
 
         return true;

@@ -59,7 +59,8 @@ export default class LoginComponent implements OnInit, OnDestroy {
                     this.isLoading = false;
                     this.remainingAttempts = null;
                     this.toastr.success(response.message || 'Inicio de sesión exitoso', 'Bienvenido');
-                    this.router.navigate(['/dashboard/default']);
+                    // REDIRIGIR AL PANEL ADMIN
+                    this.router.navigate(['/admin/dashboard/default']);
                 },
                 error: (error: any) => {
                     this.isLoading = false;
@@ -70,38 +71,28 @@ export default class LoginComponent implements OnInit, OnDestroy {
                     let waitMinutes = error.wait_minutes;
                     let remainingAttempts = error.remaining_attempts;
                     
-                    // Si está bloqueado (waitMinutes existe)
                     if (waitMinutes !== undefined && waitMinutes !== null && waitMinutes > 0) {
                         message = `Demasiados intentos fallidos. Espere ${waitMinutes} minutos antes de volver a intentar`;
                         this.errorMessage = message;
                         this.toastr.error(message, 'Cuenta bloqueada temporalmente');
-                        
-                        // Deshabilitar el formulario
                         this.formAuth.disable();
-                        
-                        // Mostrar cuenta regresiva
                         this.startCountdown(waitMinutes);
-                        
                         this.formAuth.patchValue({ password: '' });
                         return;
                     }
                     
-                    // Si hay intentos restantes
                     if (remainingAttempts !== undefined && remainingAttempts !== null && remainingAttempts > 0) {
                         this.remainingAttempts = remainingAttempts;
                         message = `Contraseña incorrecta. Le quedan ${remainingAttempts} intento(s)`;
                         this.errorMessage = message;
                         this.toastr.error(message, 'Error de autenticación');
-                        
                         this.formAuth.patchValue({ password: '' });
                         this.formAuth.get('password')?.markAsUntouched();
                         return;
                     }
                     
-                    // Error normal
                     this.errorMessage = message;
                     this.toastr.error(message, 'Error de autenticación');
-                    
                     this.formAuth.patchValue({ password: '' });
                     this.formAuth.get('password')?.markAsUntouched();
                 }

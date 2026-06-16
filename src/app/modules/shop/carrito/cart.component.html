@@ -1,0 +1,149 @@
+<!-- src/app/modules/shop/cart/cart.component.html -->
+<div class="cart-container">
+	<div class="cart-header">
+		<h2><i class="ti ti-shopping-cart"></i> Mi Carrito</h2>
+		<button class="close-btn" (click)="continuarComprando()">
+			<i class="ti ti-x"></i>
+		</button>
+	</div>
+
+	<div class="cart-content">
+		<!-- Carrito vacío -->
+		<div *ngIf="carrito.length === 0" class="empty-cart">
+			<i class="ti ti-basket"></i>
+			<h3>Tu carrito está vacío</h3>
+			<p>¡Explora nuestros productos y agrega tus favoritos!</p>
+			<button class="btn-primary" (click)="continuarComprando()"> <i class="ti ti-shopping-bag"></i> Seguir comprando </button>
+		</div>
+
+		<!-- Carrito con productos -->
+		<div *ngIf="carrito.length > 0" class="cart-with-items">
+			<!-- Tabla de productos (escritorio) -->
+			<div class="cart-table d-none d-md-block">
+				<div class="cart-table-header">
+					<div class="col-producto">Producto</div>
+					<div class="col-precio">Precio</div>
+					<div class="col-cantidad">Cantidad</div>
+					<div class="col-subtotal">Subtotal</div>
+					<div class="col-accion"></div>
+				</div>
+
+				<div class="cart-table-body">
+					<div class="cart-row" *ngFor="let item of carrito">
+						<div class="col-producto">
+							<img
+								[src]="item.producto.imagen_principal_url || 'assets/images/placeholder.png'"
+								[alt]="item.producto.nombre"
+								(error)="onImgError($event)"
+							/>
+							<div class="product-info">
+								<h4>{{ item.producto.nombre }}</h4>
+								<p class="product-stock" [class.low-stock]="item.producto.stock <= 5">
+									{{ item.producto.stock > 0 ? 'En stock' : 'Agotado' }}
+								</p>
+							</div>
+						</div>
+						<div class="col-precio"> ${{ item.producto.precio_actual | number: '1.2-2' }} </div>
+						<div class="col-cantidad">
+							<div class="qty-controls">
+								<button (click)="actualizarCantidad(item.producto.id, item.cantidad - 1)">
+									<i class="ti ti-minus"></i>
+								</button>
+								<span>{{ item.cantidad }}</span>
+								<button (click)="actualizarCantidad(item.producto.id, item.cantidad + 1)">
+									<i class="ti ti-plus"></i>
+								</button>
+							</div>
+						</div>
+						<div class="col-subtotal">
+							<span class="subtotal-price">${{ item.producto.precio_actual * item.cantidad | number: '1.2-2' }}</span>
+						</div>
+						<div class="col-accion">
+							<button class="delete-btn" (click)="eliminarDelCarrito(item.producto.id)">
+								<i class="ti ti-trash"></i>
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Vista móvil (tarjetas) -->
+			<div class="cart-mobile d-md-none">
+				<div class="cart-card" *ngFor="let item of carrito">
+					<div class="card-image">
+						<img
+							[src]="item.producto.imagen_principal_url || 'assets/images/placeholder.png'"
+							[alt]="item.producto.nombre"
+							(error)="onImgError($event)"
+						/>
+					</div>
+					<div class="card-details">
+						<h4>{{ item.producto.nombre }}</h4>
+						<div class="price-row">
+							<span class="precio">${{ item.producto.precio_actual | number: '1.2-2' }}</span>
+							<div class="qty-controls">
+								<button (click)="actualizarCantidad(item.producto.id, item.cantidad - 1)">
+									<i class="ti ti-minus"></i>
+								</button>
+								<span>{{ item.cantidad }}</span>
+								<button (click)="actualizarCantidad(item.producto.id, item.cantidad + 1)">
+									<i class="ti ti-plus"></i>
+								</button>
+							</div>
+						</div>
+						<div class="subtotal-row">
+							<span>Subtotal:</span>
+							<strong>${{ item.producto.precio_actual * item.cantidad | number: '1.2-2' }}</strong>
+						</div>
+						<button class="remove-btn" (click)="eliminarDelCarrito(item.producto.id)">
+							<i class="ti ti-trash"></i> Eliminar
+						</button>
+					</div>
+				</div>
+			</div>
+
+			<!-- Resumen del carrito -->
+			<div class="cart-summary">
+				<div class="summary-card">
+					<h3>Resumen del pedido</h3>
+
+					<div class="summary-row">
+						<span>Subtotal ({{ itemsCarrito }} productos)</span>
+						<span>${{ subtotal | number: '1.2-2' }}</span>
+					</div>
+
+					<div class="summary-row">
+						<span>Envío</span>
+						<span *ngIf="envio === 0" class="free-shipping">Gratis</span>
+						<span *ngIf="envio > 0">${{ envio | number: '1.2-2' }}</span>
+					</div>
+
+					<div class="summary-divider"></div>
+
+					<div class="summary-row total">
+						<span>Total</span>
+						<span>${{ total | number: '1.2-2' }}</span>
+					</div>
+
+					<div class="free-shipping-info" *ngIf="subtotal < 50">
+						<i class="ti ti-truck"></i>
+						¡Agrega ${{ 50 - subtotal | number: '1.2-2' }} más para envío gratis!
+					</div>
+
+					<div class="summary-actions">
+						<button class="btn-secondary" (click)="continuarComprando()">
+							<i class="ti ti-arrow-left"></i> Seguir comprando
+						</button>
+						<button class="btn-primary" (click)="finalizarCompra()">
+							Finalizar compra <i class="ti ti-arrow-right"></i>
+						</button>
+					</div>
+
+					<button class="btn-clear" (click)="vaciarCarrito()" *ngIf="carrito.length > 0">
+						<i class="ti ti-trash"></i> Vaciar carrito
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

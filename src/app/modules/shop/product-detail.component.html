@@ -1,0 +1,387 @@
+<div class="shop-container">
+	<header class="shop-header">
+		<div class="header-container">
+			<div class="logo" routerLink="/shop">
+				<div class="logo-icon"><i class="ti ti-shopping-bag"></i></div>
+				<h1>MiTienda</h1>
+			</div>
+
+			<div class="search-bar">
+				<input type="text" [(ngModel)]="searchTerm" (keyup.enter)="buscar()" placeholder="Buscar productos..." />
+				<button *ngIf="searchTerm" (click)="limpiarBusqueda()" class="clear-btn">
+					<i class="ti ti-x"></i>
+				</button>
+				<button class="search-btn" (click)="buscar()">
+					<i class="ti ti-search"></i>
+				</button>
+			</div>
+
+			<div class="header-actions">
+				<a class="action-link">
+					<i class="ti ti-box"></i>
+					<span>Pedidos</span>
+				</a>
+				<a routerLink="/login" class="action-link" *ngIf="!authService.verificarToken()">
+					<i class="ti ti-user"></i>
+					<span>Cuenta</span>
+				</a>
+				<!-- Botón Dashboard - solo si está autenticado -->
+				<a routerLink="/admin/dashboard/default" class="action-link" *ngIf="authService.verificarToken()">
+					<i class="ti ti-layout-dashboard"></i>
+					<span>Dashboard</span>
+				</a>
+				<button class="cart-btn" (click)="toggleCarrito()">
+					<i class="ti ti-shopping-cart"></i>
+					<span>Carrito</span>
+					<span class="cart-badge" *ngIf="itemsCarrito > 0">{{ itemsCarrito }}</span>
+				</button>
+			</div>
+		</div>
+	</header>
+
+	<div class="main-layout">
+		<aside class="left-sidebar">
+			<div class="sidebar-menu">
+				<div class="menu-header"> <i class="ti ti-menu-2"></i> Categorías </div>
+				<ul class="category-list">
+					<li [class.active]="selectedCategoria === null" (click)="filtrarPorCategoria(null)">
+						<i class="ti ti-layout-grid"></i> Todos los productos
+					</li>
+					<li *ngFor="let cat of categorias" [class.active]="selectedCategoria === cat.id" (click)="filtrarPorCategoria(cat.id)">
+						<i class="ti ti-device-laptop"></i> {{ cat.nombre }}
+					</li>
+				</ul>
+			</div>
+
+			<div class="promo-card">
+				<div class="promo-text">
+					<h4>Envío gratis</h4>
+					<p>en compras mayores a</p>
+					<h3>$50.00</h3>
+				</div>
+				<img src="assets/images/delivery-truck.png" alt="Envío" onerror="this.style.display='none'" />
+			</div>
+
+			<div class="vertical-features">
+				<div class="v-feature">
+					<div class="icon"><i class="ti ti-lock"></i></div>
+					<div class="text">
+						<strong>Pago seguro</strong>
+						<span>Tus pagos están protegidos</span>
+					</div>
+				</div>
+				<div class="v-feature">
+					<div class="icon"><i class="ti ti-certificate"></i></div>
+					<div class="text">
+						<strong>Garantía</strong>
+						<span>Productos con garantía</span>
+					</div>
+				</div>
+				<div class="v-feature">
+					<div class="icon"><i class="ti ti-headset"></i></div>
+					<div class="text">
+						<strong>Soporte 24/7</strong>
+						<span>Estamos para ayudarte</span>
+					</div>
+				</div>
+			</div>
+		</aside>
+
+		<main class="center-content">
+			<section class="hero-banner">
+				<div class="hero-text">
+					<h2>Tecnología que<br /><span>potencia tu día</span></h2>
+					<p>Encuentra los mejores productos<br />con los mejores precios.</p>
+					<button class="btn-primary">Ver ofertas</button>
+				</div>
+				<div class="hero-image">
+					<img src="assets/images/hero-device.png" alt="Devices" onerror="this.style.display='none'" />
+				</div>
+			</section>
+
+			<section class="horizontal-features">
+				<div class="h-feature">
+					<i class="ti ti-truck"></i>
+					<div>
+						<strong>Envíos rápidos</strong>
+						<span>Recibe en 24-48h</span>
+					</div>
+				</div>
+				<div class="h-feature">
+					<i class="ti ti-refresh"></i>
+					<div>
+						<strong>Devoluciones</strong>
+						<span>30 días de garantía</span>
+					</div>
+				</div>
+				<div class="h-feature">
+					<i class="ti ti-shield-lock"></i>
+					<div>
+						<strong>Pagos seguros</strong>
+						<span>100% protegidos</span>
+					</div>
+				</div>
+				<div class="h-feature">
+					<i class="ti ti-headset"></i>
+					<div>
+						<strong>Soporte</strong>
+						<span>Atención 24/7</span>
+					</div>
+				</div>
+			</section>
+
+			<section class="products-section" *ngIf="productosDestacados.length > 0">
+				<div class="section-header">
+					<h3>Productos destacados</h3>
+					<a href="#" class="view-all">Ver todos</a>
+				</div>
+				<div class="products-grid">
+					<div class="product-card" *ngFor="let producto of productosDestacados" (click)="verDetalleProducto(producto)">
+						<div class="discount-badge" *ngIf="producto.descuento_porcentaje > 0"> -{{ producto.descuento_porcentaje }}% </div>
+						<div class="card-image">
+							<img
+								[src]="producto.imagen_principal_url || 'assets/images/producto.png'"
+								[alt]="producto.nombre"
+								(error)="onImgError($event)"
+							/>
+						</div>
+						<div class="card-info">
+							<h4 class="product-title">{{ producto.nombre }}</h4>
+							<div class="rating">
+								<i *ngFor="let star of getStars(producto.calificacion_promedio)" class="ti ti-star-filled"></i>
+								<span>({{ producto.total_resenas }})</span>
+							</div>
+							<div class="prices">
+								<span class="current-price">${{ producto.precio_actual | number: '1.2-2' }}</span>
+								<span class="old-price" *ngIf="producto.precio_oferta">${{ producto.precio | number: '1.2-2' }}</span>
+							</div>
+							<button
+								class="btn-outline-primary"
+								(click)="$event.stopPropagation(); agregarAlCarrito(producto)"
+								[disabled]="!producto.tiene_stock"
+							>
+								<i class="ti ti-shopping-cart"></i> Agregar al carrito
+							</button>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<section class="special-offers-banner" *ngIf="productosOfertas.length > 0">
+				<div class="offer-content">
+					<h3>Ofertas especiales</h3>
+					<p>Hasta 20% de descuento en productos seleccionados</p>
+				</div>
+				<div class="offer-graphic">
+					<span>%</span>
+				</div>
+			</section>
+
+			<section class="products-section mt-4" *ngIf="productos.length > 0">
+				<div class="section-header">
+					<h3>Más productos</h3>
+				</div>
+				<div class="products-grid">
+					<div class="product-card" *ngFor="let producto of productos" (click)="verDetalleProducto(producto)">
+						<div class="discount-badge" *ngIf="producto.descuento_porcentaje > 0">-{{ producto.descuento_porcentaje }}%</div>
+						<div class="card-image">
+							<img
+								[src]="producto.imagen_principal_url || 'assets/images/producto.png'"
+								[alt]="producto.nombre"
+								(error)="onImgError($event)"
+							/>
+						</div>
+						<div class="card-info">
+							<h4 class="product-title">{{ producto.nombre }}</h4>
+							<div class="rating">
+								<i *ngFor="let star of getStars(producto.calificacion_promedio)" class="ti ti-star-filled"></i>
+							</div>
+							<div class="prices">
+								<span class="current-price">${{ producto.precio_actual | number: '1.2-2' }}</span>
+								<span class="old-price" *ngIf="producto.precio_oferta">${{ producto.precio | number: '1.2-2' }}</span>
+							</div>
+							<button class="btn-outline-primary" (click)="$event.stopPropagation(); agregarAlCarrito(producto)">
+								<i class="ti ti-shopping-cart"></i> Agregar
+							</button>
+						</div>
+					</div>
+				</div>
+				<div class="loading-more" *ngIf="loadingMore">
+					<div class="spinner"></div>
+				</div>
+			</section>
+		</main>
+
+		<aside class="right-sidebar" [class.mobile-open]="mostrarCarrito">
+			<div class="mobile-close-cart" (click)="toggleCarrito()"> <i class="ti ti-x"></i> Cerrar carrito </div>
+
+			<div class="cart-widget">
+				<h3 class="widget-title">Tu carrito ({{ itemsCarrito }})</h3>
+
+				<div class="cart-items">
+					<div *ngIf="carrito.length === 0" class="empty-cart-msg">El carrito está vacío</div>
+
+					<div class="cart-item" *ngFor="let item of carrito">
+						<img [src]="item.producto.imagen_principal_url || 'assets/images/producto.png'" (error)="onImgError($event)" />
+						<div class="item-details">
+							<h5>{{ item.producto.nombre }}</h5>
+							<span class="price">${{ item.producto.precio_actual | number: '1.2-2' }}</span>
+							<div class="qty-controls">
+								<button (click)="actualizarCantidad(item.producto.id, item.cantidad - 1)"
+									><i class="ti ti-minus"></i
+								></button>
+								<span>{{ item.cantidad }}</span>
+								<button (click)="actualizarCantidad(item.producto.id, item.cantidad + 1)"
+									><i class="ti ti-plus"></i
+								></button>
+								<button class="delete-btn" (click)="eliminarDelCarrito(item.producto.id)"
+									><i class="ti ti-trash"></i
+								></button>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="cart-summary" *ngIf="carrito.length > 0">
+					<div class="summary-row">
+						<span>Subtotal</span>
+						<span>${{ totalCarrito | number: '1.2-2' }}</span>
+					</div>
+					<div class="summary-row">
+						<span>Envío</span>
+						<strong>Gratis</strong>
+					</div>
+					<div class="summary-row total">
+						<span>Total</span>
+						<span>${{ totalCarrito | number: '1.2-2' }}</span>
+					</div>
+					<button class="btn-primary full-width" routerLink="/checkout">Finalizar compra</button>
+					<a routerLink="/carrito" class="view-full-cart">Ver carrito completo</a>
+				</div>
+			</div>
+
+			<div class="recommendations-widget" *ngIf="productosRecomendados.length > 0">
+				<h3 class="widget-title">También te puede interesar</h3>
+				<div class="rec-list">
+					<div class="rec-item" *ngFor="let rec of productosRecomendados">
+						<img [src]="rec.imagen_principal_url || 'assets/images/producto.png'" (error)="onImgError($event)" />
+						<div class="rec-info">
+							<h5>{{ rec.nombre }}</h5>
+							<span class="price">${{ rec.precio_actual | number: '1.2-2' }}</span>
+						</div>
+						<button class="add-mini-btn" (click)="agregarAlCarrito(rec)"><i class="ti ti-plus"></i></button>
+					</div>
+				</div>
+			</div>
+		</aside>
+	</div>
+
+	<div class="mobile-overlay" *ngIf="mostrarCarrito" (click)="toggleCarrito()"></div>
+
+	<div class="pre-footer-benefits">
+		<div class="benefit">
+			<i class="ti ti-thumb-up"></i>
+			<div>
+				<strong>Miles de productos</strong>
+				<span>Las mejores marcas</span>
+			</div>
+		</div>
+		<div class="benefit">
+			<i class="ti ti-tag"></i>
+			<div>
+				<strong>Precios competitivos</strong>
+				<span>Ahorra siempre</span>
+			</div>
+		</div>
+		<div class="benefit">
+			<i class="ti ti-shield-check"></i>
+			<div>
+				<strong>Calidad garantizada</strong>
+				<span>Productos originales</span>
+			</div>
+		</div>
+		<div class="benefit">
+			<i class="ti ti-star"></i>
+			<div>
+				<strong>Clientes satisfechos</strong>
+				<span>Más de 10k+ clientes</span>
+			</div>
+		</div>
+	</div>
+
+	<footer class="shop-footer">
+		<div class="footer-top">
+			<div class="newsletter-col">
+				<h3>Suscríbete a nuestro newsletter</h3>
+				<p>Recibe ofertas exclusivas y novedades</p>
+				<div class="subscribe-form">
+					<input type="email" placeholder="Tu correo electrónico" />
+					<button class="btn-primary">Suscribirse</button>
+				</div>
+			</div>
+			<div class="links-col">
+				<h4>MiTienda</h4>
+				<a href="#">Sobre nosotros</a>
+				<a href="#">Contacto</a>
+				<a href="#">Términos y condiciones</a>
+				<a href="#">Política de privacidad</a>
+			</div>
+			<div class="links-col">
+				<h4>Ayuda</h4>
+				<a href="#">Preguntas frecuentes</a>
+				<a href="#">Envíos y entregas</a>
+				<a href="#">Devoluciones</a>
+				<a href="#">Garantías</a>
+			</div>
+			<div class="links-col">
+				<h4>Mi cuenta</h4>
+				<a href="#">Mis pedidos</a>
+				<a href="#">Direcciones</a>
+				<a href="#">Métodos de pago</a>
+				<a href="#">Configuración</a>
+			</div>
+			<div class="social-col">
+				<h4>Síguenos</h4>
+				<div class="social-icons">
+					<a href="#"><i class="ti ti-brand-facebook"></i></a>
+					<a href="#"><i class="ti ti-brand-instagram"></i></a>
+					<a href="#"><i class="ti ti-brand-twitter"></i></a>
+					<a href="#"><i class="ti ti-brand-youtube"></i></a>
+				</div>
+			</div>
+		</div>
+		<div class="footer-bottom">
+			<p>© 2024 MiTienda. Todos los derechos reservados.</p>
+			<div class="payment-methods">
+				<i class="ti ti-brand-visa"></i>
+				<i class="ti ti-brand-mastercard"></i>
+				<i class="ti ti-brand-paypal"></i>
+			</div>
+		</div>
+	</footer>
+
+	<div class="product-modal" [class.open]="mostrarModal" (click)="cerrarModal()">
+		<div class="modal-content" (click)="$event.stopPropagation()">
+			<button class="modal-close" (click)="cerrarModal()"><i class="ti ti-x"></i></button>
+			<div class="modal-body" *ngIf="productoSeleccionado">
+				<div class="modal-image">
+					<img [src]="productoSeleccionado.imagen_principal_url || 'assets/images/placeholder.png'" />
+				</div>
+				<div class="modal-info">
+					<h2>{{ productoSeleccionado.nombre }}</h2>
+					<div class="modal-price">
+						<span class="current-price">${{ productoSeleccionado.precio_actual | number: '1.2-2' }}</span>
+					</div>
+					<p class="modal-description">{{ productoSeleccionado.descripcion_corta }}</p>
+					<button
+						class="btn-primary full-width mt-4"
+						(click)="agregarAlCarrito(productoSeleccionado); cerrarModal()"
+						[disabled]="!productoSeleccionado.tiene_stock"
+					>
+						<i class="ti ti-shopping-cart"></i> Agregar al carrito
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

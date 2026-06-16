@@ -15,20 +15,13 @@
                             </button>
                         </div>
                     </div>
-                    <hr class="separator"/>
-                    <ag-grid-angular
-                        style="width: 100%; height: 300px;"
-                        class="ag-theme-material"
-                        [advancedFilterModel]=""
-                        [gridOptions]="gridOptions"
-                        [columnDefs]="columnDefs"
-                        [rowData]="rowData"
-                        [rowSelection]="rowSelection"
-                        [pagination]="true"
+                    <hr class="separator" />
+                    <ag-grid-angular style="width: 100%; height: 600px;" class="ag-theme-material"
+                        [advancedFilterModel]="" [gridOptions]="gridOptions" [columnDefs]="columnDefs"
+                        [rowData]="rowData" [rowSelection]="rowSelection" [pagination]="true"
                         [paginationPageSize]="paginationPageSize"
                         [paginationPageSizeSelector]="paginationPageSizeSelector"
-                        [paginationNumberFormatter]="paginationNumberFormatter"
-                        [localeText]="localEs"
+                        [paginationNumberFormatter]="paginationNumberFormatter" [localeText]="localEs"
                         (gridReady)="onGridReady($event)">
                     </ag-grid-angular>
                 </div>
