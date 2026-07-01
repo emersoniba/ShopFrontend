@@ -60,7 +60,7 @@ export default class LoginComponent implements OnInit, OnDestroy {
                     this.remainingAttempts = null;
                     this.toastr.success(response.message || 'Inicio de sesión exitoso', 'Bienvenido');
                     // REDIRIGIR AL PANEL ADMIN
-                    this.router.navigate(['/admin/dashboard/default']);
+                    this.router.navigate(['/dashboard/default']);
                 },
                 error: (error: any) => {
                     this.isLoading = false;

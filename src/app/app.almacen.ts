@@ -5,8 +5,6 @@ import { PersonalComponent } from './modules/almacen/personal/personal.component
 import { PersonalFormComponent } from './modules/almacen/personal/personal-form/personal-form.component';
 import { MaterialComponent } from './modules/almacen/parametrizacion/material/material.component';
 import { MaterialFormComponent } from './modules/almacen/parametrizacion/material/material-form/material-form.component';
-import { ProductDetailComponent } from './modules/shop/product-detail.component';
-import { CartComponent } from './modules/shop/carrito/cart.component';
 
 export const AppAlmacenConfig = [
     LoginComponent,
@@ -15,7 +13,5 @@ export const AppAlmacenConfig = [
     PersonalComponent,
     PersonalFormComponent,
     MaterialComponent,
-    MaterialFormComponent,
-    ProductDetailComponent,
-    CartComponent
+    MaterialFormComponent
 ]

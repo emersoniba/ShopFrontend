@@ -89,13 +89,13 @@ export class MaterialFormComponent implements OnInit, OnDestroy {
             descripcion_larga: this.data.descripcion_larga,
             precio: this.data.precio,
             precio_oferta: this.data.precio_oferta,
-            stock: this.data.stock,
-            stock_minimo: this.data.stock_minimo,
+           // stock: this.data.stock,
+           // stock_minimo: this.data.stock_minimo,
             categoria_ids: categoriaIds,
             destacado: this.data.destacado,
             oferta: this.data.oferta,
-            nuevo: this.data.nuevo,
-            mas_vendido: this.data.mas_vendido,
+           // nuevo: this.data.nuevo,
+           // mas_vendido: this.data.mas_vendido,
             activo: this.data.activo
         });
 

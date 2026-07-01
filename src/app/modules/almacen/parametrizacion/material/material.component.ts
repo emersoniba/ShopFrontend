@@ -9,7 +9,7 @@ import Swal from 'sweetalert2';
 import { HandleErrorMessage } from 'src/app/utils/handle.errors';
 import { RendererComponent } from '../../bandejas/abrenderer/renderer.component';
 import { MaterialFormComponent } from './material-form/material-form.component';
-import { Producto } from 'src/app/models/producto.models';
+import { Producto, StockAlmacen } from 'src/app/models/producto.models';
 import { ProductoService } from 'src/app/services/producto.services';
 import { VerMasRendererComponent } from '../../bandejas/text_expand-render/text-expand-renderer.component';
 import { ImageRendererComponent } from '../../bandejas/imagen-render/image-renderer.component';
@@ -20,7 +20,7 @@ import { ImageRendererComponent } from '../../bandejas/imagen-render/image-rende
 	styleUrl: './material.component.scss'
 })
 export class MaterialComponent implements OnInit, OnDestroy {
-	public rowData: Producto[] = []; // Cambiar de dataProductos a rowData
+	public rowData: Producto[] = [];
 	public loading = false;
 	private gridApi!: GridApi<Producto>;
 
@@ -53,11 +53,10 @@ export class MaterialComponent implements OnInit, OnDestroy {
 		},
 		{
 			field: 'nombre',
-			headerName: 'Material',
+			headerName: 'Producto',
 			filter: true,
 			floatingFilter: true,
 			minWidth: 200,
-			tooltipField: 'denominacion',
 			wrapText: true,
 			autoHeight: true,
 			cellRenderer: VerMasRendererComponent,
@@ -66,10 +65,6 @@ export class MaterialComponent implements OnInit, OnDestroy {
 				'line-height': '1.5',
 				'word-break': 'break-word'
 			}
-			/*filter: true, 
-            minWidth: 250, 
-            cellRenderer: VerMasRendererComponent,
-            floatingFilter: true*/
 		},
 		{
 			field: 'categoria_nombres',
@@ -83,7 +78,7 @@ export class MaterialComponent implements OnInit, OnDestroy {
 			field: 'precio_actual',
 			headerName: 'Precio',
 			filter: true,
-			minWidth: 150,
+			minWidth: 120,
 			cellRenderer: (params: any) => {
 				const precio = params.value;
 				const precioOferta = params.data?.precio_oferta;
@@ -94,46 +89,40 @@ export class MaterialComponent implements OnInit, OnDestroy {
 			}
 		},
 		{
-			field: 'stock',
-			headerName: 'Stock',
-			filter: true,
-			minWidth: 120,
+			field: 'stock_total',
+			headerName: 'Stock Global',
+			filter: 'agNumberColumnFilter',
+			minWidth: 130,
 			cellRenderer: (params: any) => {
-				const stock = params.value;
-				const stockMinimo = params.data?.stock_minimo || 5;
-				let clase = 'text-success';
-				if (stock <= 0) {
-					clase = 'text-danger';
-				} else if (stock <= stockMinimo) {
-					clase = 'text-warning';
-				}
-				return `<span class="${clase} fw-bold">${stock}</span>`;
+				const stock = params.value || 0;
+				let clase = stock <= 0 ? 'text-danger' : 'text-success';
+				return `<span class="${clase} fw-bold fs-6">${stock} u.</span>`;
 			}
 		},
 		{
-			field: 'stock_minimo',
-			headerName: 'Stock Mínimo',
-			filter: true,
-			minWidth: 150,
+			field: 'stocks',
+			headerName: 'Detalle por Almacenes',
+			filter: false,
+			minWidth: 250,
+			autoHeight: true,
 			cellRenderer: (params: any) => {
-				const stockMinimo = params.value;
-				return `<span class="fw-bold">${stockMinimo}</span>`;
-			}
-		},
-		{
-			field: 'destacado',
-			headerName: 'Destacado',
-			filter: true,
-			minWidth: 150,
-			cellRenderer: (params: any) => {
-				return params.value ? '<span class="badge bg-success">Sí</span>' : '<span class="badge bg-secondary">No</span>';
+				const stocks: StockAlmacen[] = params.value || [];
+				if (stocks.length === 0) return '<span class="text-muted small">Sin distribución</span>';
+				
+				// Formatea el arreglo de stocks en una lista HTML pequeña
+				let html = '<ul class="mb-0 ps-3 small" style="list-style-type: disc;">';
+				stocks.forEach(s => {
+					html += `<li><b>${s.almacen_nombre}:</b> ${s.cantidad}</li>`;
+				});
+				html += '</ul>';
+				return html;
 			}
 		},
 		{
 			field: 'oferta',
 			headerName: 'Oferta',
 			filter: true,
-			minWidth: 130,
+			minWidth: 100,
 			cellRenderer: (params: any) => {
 				return params.value ? '<span class="badge bg-danger">Sí</span>' : '<span class="badge bg-secondary">No</span>';
 			}
@@ -142,7 +131,7 @@ export class MaterialComponent implements OnInit, OnDestroy {
 			field: 'activo',
 			headerName: 'Estado',
 			filter: true,
-			minWidth: 130,
+			minWidth: 100,
 			cellRenderer: (params: any) => {
 				return params.value ? '<span class="badge bg-success">Activo</span>' : '<span class="badge bg-danger">Inactivo</span>';
 			}
@@ -153,7 +142,6 @@ export class MaterialComponent implements OnInit, OnDestroy {
 			filter: false,
 			minWidth: 100,
 			cellRenderer: ImageRendererComponent
-
 		}
 	];
 
@@ -170,10 +158,10 @@ export class MaterialComponent implements OnInit, OnDestroy {
 
 	public getAllProductos(): void {
 		this.loading = true;
-		this.formSubscription = this.productoService.getProductos(1, 100).subscribe({
+		// Solicitamos una página grande para que AG Grid pagine la data en memoria (Client-Side)
+		this.formSubscription = this.productoService.getProductos(1, 200).subscribe({
 			next: (response: any) => {
 				this.rowData = response.results || response;
-				console.log(this.rowData, 'aaaaaaaaaaaaaaaaa');
 				this.loading = false;
 
 				if (this.gridApi) {
@@ -190,49 +178,38 @@ export class MaterialComponent implements OnInit, OnDestroy {
 
 	public accionNuevo(): void {
 		const dialogRef = this.dialog.open(MaterialFormComponent, {
-			width: '700px',
+			width: '800px',
 			disableClose: true,
 			data: {}
 		});
 
 		dialogRef.afterClosed().subscribe((result) => {
-			if (result) {
-				this.getAllProductos();
-			}
+			if (result) this.getAllProductos();
 		});
 	}
 
 	public OnActionClick(event: any): void {
-		const { action, rowId, data } = event;
-		if (action?.toLowerCase() === 'edit') {
-			this.onActionEditar(data);
-		}
-		if (action?.toLowerCase() === 'delete') {
-			this.onActionEliminar(data);
-		}
+		const { action, data } = event;
+		if (action?.toLowerCase() === 'edit') this.onActionEditar(data);
+		if (action?.toLowerCase() === 'delete') this.onActionEliminar(data);
 	}
 
 	public onActionEditar(data: Producto): void {
 		const dialogRef = this.dialog.open(MaterialFormComponent, {
-			width: '700px',
+			width: '800px',
 			disableClose: true,
 			data: data
 		});
 
 		dialogRef.afterClosed().subscribe((result) => {
-			if (result) {
-				this.getAllProductos();
-			}
+			if (result) this.getAllProductos();
 		});
 	}
 
 	public onActionEliminar(data: Producto): void {
 		this.alertService.showConfirmationDialog('Eliminar Producto', '¿Está seguro de eliminar este producto?').then((result) => {
 			if (result.isConfirmed) {
-				Swal.fire({
-					title: 'Eliminando...',
-					didOpen: () => Swal.showLoading()
-				});
+				Swal.fire({ title: 'Eliminando...', didOpen: () => Swal.showLoading() });
 
 				this.productoService.eliminarProducto(data.id).subscribe({
 					next: () => {
