@@ -1,15 +1,18 @@
+<!-- src/app/components/material/material-form/material-form.component.html -->
+
 <h3 mat-dialog-title>
     <b>{{labelForm}}</b>
 </h3>
 
 <div mat-dialog-content>
     <form [formGroup]="formRegistro" class="row">
+
         <!-- Nombre del Producto -->
         <div class="col-12 mb-3">
             <mat-form-field class="w-100" appearance="fill">
                 <mat-label>Nombre del Producto *</mat-label>
                 <mat-icon matPrefix>inventory</mat-icon>
-                <input matInput formControlName="nombre" placeholder="Ej: Auriculares Gamer">
+                <input matInput formControlName="nombre" placeholder="Ej: Whisky Johnnie Walker Black Label">
                 @if(formRegistro.get('nombre')?.hasError('required') && formRegistro.get('nombre')?.touched){
                     <mat-error>Nombre requerido</mat-error>
                 }
@@ -22,22 +25,13 @@
         <!-- Descripción Corta -->
         <div class="col-12 mb-3">
             <mat-form-field class="w-100" appearance="fill">
-                <mat-label>Descripción Corta</mat-label>
+                <mat-label>Descripción</mat-label>
                 <mat-icon matPrefix>description</mat-icon>
                 <textarea matInput formControlName="descripcion_corta" rows="2" placeholder="Breve descripción del producto"></textarea>
             </mat-form-field>
         </div>
 
-        <!-- Descripción Larga -->
-        <div class="col-12 mb-3">
-            <mat-form-field class="w-100" appearance="fill">
-                <mat-label>Descripción Larga</mat-label>
-                <mat-icon matPrefix>description</mat-icon>
-                <textarea matInput formControlName="descripcion_larga" rows="4" placeholder="Descripción detallada del producto"></textarea>
-            </mat-form-field>
-        </div>
-
-        <!-- Precio -->
+        <!-- Precios -->
         <div class="row">
             <div class="col-md-6 col-sm-12 mb-3">
                 <mat-form-field class="w-100" appearance="fill">
@@ -59,34 +53,12 @@
             </div>
         </div>
 
-        <!-- Stock -->
-        <div class="row">
-            <div class="col-md-6 col-sm-12 mb-3">
-                <mat-form-field class="w-100" appearance="fill">
-                    <mat-label>Stock *</mat-label>
-                    <mat-icon matPrefix>inventory_2</mat-icon>
-                    <input matInput type="number" formControlName="stock" min="0">
-                    @if(formRegistro.get('stock')?.hasError('required')){
-                        <mat-error>Stock requerido</mat-error>
-                    }
-                </mat-form-field>
-            </div>
-
-            <div class="col-md-6 col-sm-12 mb-3">
-                <mat-form-field class="w-100" appearance="fill">
-                    <mat-label>Stock Mínimo</mat-label>
-                    <mat-icon matPrefix>warning</mat-icon>
-                    <input matInput type="number" formControlName="stock_minimo" min="0">
-                </mat-form-field>
-            </div>
-        </div>
-
         <!-- Categorías -->
         <div class="col-12 mb-3">
             <mat-form-field class="w-100" appearance="fill">
                 <mat-label>Categorías *</mat-label>
                 <mat-icon matPrefix>category</mat-icon>
-                <mat-select formControlName="categoria_ids" multiple>
+                <mat-select formControlName="categoria_ids" multiple [disabled]="isViewMode">
                     @for(cat of dataCategorias; track cat.id){
                         <mat-option [value]="cat.id">{{cat.nombre}}</mat-option>
                     }
@@ -97,62 +69,154 @@
             </mat-form-field>
         </div>
 
+        <!-- ====================== STOCK POR ALMACÉN ====================== -->
+        <div class="col-12 mb-3">
+            <h6 class="mb-2"><b>📦 Stock por Almacén</b></h6>
+            
+            <!-- Lista de almacenes con sus cantidades resumidas -->
+            <div class="row g-2 mb-3">
+                @for(item of stockItems; track item.almacen_id){
+                    <div class="col-md-3 col-sm-6">
+                        <div class="card almacen-card" 
+                             [class.active]="almacenSeleccionadoId === item.almacen_id"
+                             (click)="seleccionarAlmacen(item.almacen_id)">
+                            <div class="card-body p-2 text-center">
+                                <div class="almacen-nombre">{{item.almacen_nombre}}</div>
+                                <div class="almacen-cantidad" [class.sin-stock]="item.cantidad === 0">
+                                    {{item.cantidad}} unidades
+                                </div>
+                                @if(item.cantidad <= item.stock_minimo && item.cantidad > 0){
+                                    <span class="badge bg-warning text-dark">⚠️ Stock bajo</span>
+                                }
+                                @if(item.cantidad === 0){
+                                    <span class="badge bg-danger">Sin stock</span>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <!-- Detalle del almacén seleccionado -->
+            @if(stockSeleccionado){
+                <div class="stock-detail-card">
+                    <h6 class="mb-2">
+                        <b>✏️ Configurar stock para: {{stockSeleccionado.almacen_nombre}}</b>
+                    </h6>
+                    <div class="row">
+                        <div class="col-md-3 col-sm-6 mb-2">
+                            <mat-form-field class="w-100" appearance="fill">
+                                <mat-label>Cantidad</mat-label>
+                                <mat-icon matPrefix>inventory_2</mat-icon>
+                                <input matInput type="number" 
+                                       [value]="stockSeleccionado.cantidad" 
+                                       (input)="actualizarCantidad($event)"
+                                       min="0"
+                                       [disabled]="isViewMode">
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-3 col-sm-6 mb-2">
+                            <mat-form-field class="w-100" appearance="fill">
+                                <mat-label>Stock Mínimo</mat-label>
+                                <mat-icon matPrefix>warning</mat-icon>
+                                <input matInput type="number" 
+                                       [value]="stockSeleccionado.stock_minimo" 
+                                       (input)="actualizarStockMinimo($event)"
+                                       min="0"
+                                       [disabled]="isViewMode">
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-3 col-sm-6 mb-2">
+                            <mat-form-field class="w-100" appearance="fill">
+                                <mat-label>Stock Máximo</mat-label>
+                                <mat-icon matPrefix>arrow_upward</mat-icon>
+                                <input matInput type="number" 
+                                       [value]="stockSeleccionado.stock_maximo" 
+                                       (input)="actualizarStockMaximo($event)"
+                                       min="0"
+                                       [disabled]="isViewMode">
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-3 col-sm-6 mb-2">
+                            <mat-form-field class="w-100" appearance="fill">
+                                <mat-label>Punto de Reorden</mat-label>
+                                <mat-icon matPrefix>refresh</mat-icon>
+                                <input matInput type="number" 
+                                       [value]="stockSeleccionado.punto_reorden" 
+                                       (input)="actualizarPuntoReorden($event)"
+                                       min="0"
+                                       [disabled]="isViewMode">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <small class="text-muted">
+                        💡 El punto de reorden es el nivel mínimo que activa una alerta para reabastecer
+                    </small>
+                </div>
+            } @else {
+                <div class="text-center text-muted p-3">
+                    <i class="ti ti-hand-click" style="font-size: 24px;"></i>
+                    <p class="mt-2">Seleccione un almacén para configurar su stock</p>
+                </div>
+            }
+        </div>
+
         <!-- Características -->
         <div class="col-12 mb-3">
             <div class="row">
-                <div class="col-md-3 col-sm-6">
-                    <mat-checkbox formControlName="destacado">Producto Destacado</mat-checkbox>
+                <div class="col-md-4 col-sm-6">
+                    <mat-checkbox formControlName="destacado" [disabled]="isViewMode">⭐ Destacado</mat-checkbox>
                 </div>
-                <div class="col-md-3 col-sm-6">
-                    <mat-checkbox formControlName="oferta">En Oferta</mat-checkbox>
+                <div class="col-md-4 col-sm-6">
+                    <mat-checkbox formControlName="oferta" [disabled]="isViewMode">🏷️ En Oferta</mat-checkbox>
                 </div>
-                <div class="col-md-3 col-sm-6">
-                    <mat-checkbox formControlName="nuevo">Producto Nuevo</mat-checkbox>
-                </div>
-                <div class="col-md-3 col-sm-6">
-                    <mat-checkbox formControlName="mas_vendido">Más Vendido</mat-checkbox>
+                <div class="col-md-4 col-sm-6">
+                    <mat-checkbox formControlName="activo" [disabled]="isViewMode">✅ Activo</mat-checkbox>
                 </div>
             </div>
         </div>
 
-        <!-- Activo -->
-        <div class="col-12 mb-3">
-            <mat-checkbox formControlName="activo">Producto Activo</mat-checkbox>
-        </div>
-
-        <!-- Campo de carga de imagen -->
-        <div class="col-12 mb-3">
-            <div class="image-upload-container">
-                <label class="image-upload-label" [class.has-image]="selectedFile || currentImageUrl">
-                    <mat-icon class="upload-icon">cloud_upload</mat-icon>
-                    <span>{{ selectedFileName || (currentImageUrl ? 'Cambiar imagen' : 'Seleccionar imagen del producto') }}</span>
-                    <input type="file" accept="image/*" (change)="onFileSelected($event)" class="file-input" #fileInput>
-                </label>
+        <!-- Imagen -->
+        @if(!isViewMode){
+            <div class="col-12 mb-3">
+                <div class="image-upload-container">
+                    <label class="image-upload-label" [class.has-image]="selectedFile || currentImageUrl">
+                        <mat-icon class="upload-icon">cloud_upload</mat-icon>
+                        <span>{{ selectedFileName || (currentImageUrl ? 'Cambiar imagen' : 'Seleccionar imagen del producto') }}</span>
+                        <input type="file" accept="image/*" (change)="onFileSelected($event)" class="file-input" #fileInput>
+                    </label>
+                </div>
             </div>
-        </div>
+        }
 
         <!-- Vista previa de imagen -->
         @if(previewImageUrl){
             <div class="col-12 text-center mt-2">
                 <div class="image-preview-container">
                     <img [src]="previewImageUrl" alt="Vista previa" class="image-preview" (error)="onImageError()">
-                    <button type="button" class="btn-remove-image" (click)="removeImage()" matTooltip="Eliminar imagen">
-                        <mat-icon>close</mat-icon>
-                    </button>
+                    @if(!isViewMode){
+                        <button type="button" class="btn-remove-image" (click)="removeImage()" matTooltip="Eliminar imagen">
+                            <mat-icon>close</mat-icon>
+                        </button>
+                    }
                 </div>
             </div>
         }
+
     </form>
 </div>
 
+<!-- Acciones -->
 <div mat-dialog-actions align="end" class="px-3 pb-3">
     <button type="button" mat-button class="btn btn-secondary btn-round" (click)="accionCancel()" [disabled]="uploading">
-        <i class="ti ti-x"></i> Cancelar
+        <i class="ti ti-x"></i> {{ isViewMode ? 'Cerrar' : 'Cancelar' }}
     </button>
-    <button type="button" mat-button class="btn btn-primary btn-round ms-2" (click)="accionRegistrar()" [disabled]="formRegistro.invalid || uploading">
-        <i class="ti ti-send"></i> {{labelForm}}
-        @if(uploading){
-            <mat-spinner diameter="20" class="ms-2"></mat-spinner>
-        }
-    </button>
+    @if(!isViewMode){
+        <button type="button" mat-button class="btn btn-primary btn-round ms-2" (click)="accionRegistrar()" [disabled]="formRegistro.invalid || uploading">
+            <i class="ti ti-send"></i> {{labelForm}}
+            @if(uploading){
+                <mat-spinner diameter="20" class="ms-2"></mat-spinner>
+            }
+        </button>
+    }
 </div>

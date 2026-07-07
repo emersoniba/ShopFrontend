@@ -27,7 +27,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 //
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card'; // <-- añadir
-import { ImageRendererComponent } from './modules/almacen/bandejas/imagen-render/image-renderer.component';
+import { PaginationInterceptor } from './modules/authentication/interceptor/pagination.interceptor';
 // ...otros imports...
 
 @NgModule({
@@ -67,6 +67,11 @@ import { ImageRendererComponent } from './modules/almacen/bandejas/imagen-render
     ],
     bootstrap: [AppComponent],
     providers: [
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: PaginationInterceptor,
+            multi: true
+        },
         provideAnimationsAsync(),
         {
             provide: HTTP_INTERCEPTORS,

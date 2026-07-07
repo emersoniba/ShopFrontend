@@ -1,101 +1,78 @@
-/* Estilos para la carga de imágenes */
+// src/app/components/material/material-form/material-form.component.scss
 
 .image-upload-container {
-    margin-bottom: 1rem;
+    margin: 10px 0;
 }
 
 .image-upload-label {
     display: flex;
     align-items: center;
-    padding: 1rem;
+    justify-content: center;
+    gap: 10px;
+    padding: 20px;
     border: 2px dashed #ccc;
     border-radius: 8px;
-    background-color: #fafafa;
     cursor: pointer;
     transition: all 0.3s ease;
-    min-height: 56px;
+    background: #f8f9fa;
+    
     &:hover {
-        border-color: #3f51b5;
-        background-color: #f5f5f5;
+        border-color: #007bff;
+        background: #e9ecef;
     }
+    
+    &.has-image {
+        border-color: #28a745;
+        background: #f0fff4;
+    }
+    
     .upload-icon {
-        margin-right: 8px;
-        color: #3f51b5;
+        font-size: 24px;
+        color: #6c757d;
     }
-    span {
-        color: #666;
+    
+    .file-input {
+        display: none;
     }
-}
-
-.file-input {
-    display: none;
 }
 
 .image-preview-container {
     position: relative;
     display: inline-block;
-    margin: 0 auto;
-}
-
-.image-preview {
-    max-width: 150px;
-    max-height: 150px;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    border: 1px solid #e0e0e0;
-}
-
-.btn-remove-image {
-    position: absolute;
-    top: -3px;
-    right: -13px;
-    width: 34px;
-    height: 27px;
-    border-radius: 50%;
-    background-color: #ff1100;
-    color: white;
-    border: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    font-size: 14px;
-    &:hover {
-        background-color: #d32f2f;
+    
+    .image-preview {
+        max-width: 200px;
+        max-height: 200px;
+        border-radius: 8px;
+        border: 1px solid #ddd;
+        object-fit: cover;
     }
-}
-
-
-/* Loading spinner en botón */
-
-mat-spinner {
-    display: inline-block;
-    margin-left: 8px;
-}
-
-
-/* Responsive */
-
-@media (max-width: 768px) {
-    .image-upload-label {
-        flex-direction: column;
-        text-align: center;
-        padding: 1.5rem;
-        .upload-icon {
-            margin-right: 0;
-            margin-bottom: 8px;
+    
+    .btn-remove-image {
+        position: absolute;
+        top: -10px;
+        right: -10px;
+        background: #dc3545;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        
+        &:hover {
+            transform: scale(1.1);
+            background: #c82333;
+        }
+        
+        mat-icon {
+            font-size: 18px;
+            width: 18px;
+            height: 18px;
         }
     }
-    .image-preview {
-        max-width: 120px;
-        max-height: 120px;
-    }
-}
-
-
-/* Estilos para el estado de carga */
-
-.uploading {
-    opacity: 0.7;
-    pointer-events: none;
 }
