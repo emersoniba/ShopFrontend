@@ -1,5 +1,17 @@
- img {
-     width: 120px;
-     margin-top: 0.5cm;
-     margin-left: 1.4cm;
- }
+.m-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 120px; /* Esta es la altura que le restamos al scrollbar */
+    padding: 10px;
+    background-color: transparent; /* Pon el color de fondo de tu sidebar si es necesario */
+}
+
+/* Ajustamos la imagen usando px y object-fit para que no se deforme */
+.logo {
+    width: 90px; /* Tamaño ideal para que se vea claro pero no invasivo */
+    height: auto;
+    max-height: 100%;
+    object-fit: contain;
+    margin: 0; /* Quitamos los márgenes en cm */
+}

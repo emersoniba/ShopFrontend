@@ -4,7 +4,7 @@ import { PerfilModalComponent } from './modules/perfil-modal/perfil-modal.compon
 import { PersonalComponent } from './modules/almacen/personal/personal.component';
 import { PersonalFormComponent } from './modules/almacen/personal/personal-form/personal-form.component';
 import { MaterialComponent } from './modules/almacen/parametrizacion/material/material.component';
-//import { MaterialFormComponent } from './modules/almacen/parametrizacion/material/material-form/material-form.component';
+import { MaterialFormComponent } from './modules/almacen/parametrizacion/material/material-form/material-form.component';
 
 export const AppAlmacenConfig = [
     LoginComponent,
@@ -13,5 +13,5 @@ export const AppAlmacenConfig = [
     PersonalComponent,
     PersonalFormComponent,
     MaterialComponent,
-    //MaterialFormComponent
+    MaterialFormComponent
 ]

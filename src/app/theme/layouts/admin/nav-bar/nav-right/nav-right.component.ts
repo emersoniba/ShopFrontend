@@ -110,10 +110,10 @@ export class NavRightComponent implements OnInit, OnDestroy {
             // Configuración para desktop
             dialogConfig = {
                 ...dialogConfig,
-                width: '600px',
+                width: '800px',
                 //width:'80vw',
                 maxWidth: '600px',
-                height: '35vw',
+                height: '30vw',
                 maxHeight: '90vh',
                 panelClass: ['perfil-dialog', 'perfil-dialog-desktop']
             };

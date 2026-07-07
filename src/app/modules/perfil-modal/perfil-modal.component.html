@@ -1,6 +1,6 @@
-<h3 mat-dialog-title>
-    <b>Mi Perfil</b>
-</h3>
+<div mat-dialog-title class="d-flex justify-content-between align-items-center bg-primary text-white p-3 m-0">
+  <h3 class="m-0 text-white fw-bold">Mi Perfil</h3>
+</div>
 
 <div class="row" mat-dialog-content>
     <form [formGroup]="perfilForm">
@@ -149,16 +149,16 @@
     </form>
 </div>
 
-<div mat-dialog-actions class="px-4 mb-4">
-    <button type="button" mat-button class="btn btn-primary btn-round mr-05" (click)="guardarCambios()" [disabled]="cargando">
-        <i class="ti ti-send"></i> 
+<div mat-dialog-actions class="px-3 pb-3 bg-light d-flex justify-content-end m-0 border-top">
+    <button type="button" mat-button class="btn btn-outline-secondary btn-round" (click)="cancelar()" [disabled]="cargando">
+        <i class="ti ti-x"></i> Cancelar
+    </button>
+    <button type="button" mat-button class="btn btn-primary btn-round ms-2" (click)="guardarCambios()" [disabled]="cargando">
+        <i class="ti ti-device-floppy"></i> 
         <span *ngIf="!cargando">Guardar Cambios</span>
         <span *ngIf="cargando">
-            <span class="spinner-border spinner-border-sm me-2"></span>
+            <span class="spinner-border spinner-border-sm me-1"></span>
             Guardando...
         </span>
-    </button>
-    <button type="button" mat-button class="btn btn-danger btn-round" (click)="cancelar()">
-        <i class="ti ti-loader"></i> Cancelar
     </button>
 </div>

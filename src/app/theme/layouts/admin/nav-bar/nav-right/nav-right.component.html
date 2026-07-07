@@ -1,121 +1,47 @@
 <ul class="list-unstyled">
-    <!-- Notificaciones (mantener igual) -->
-    <li class="dropdown pc-h-item" ngbDropdown>
-        <a class="pc-head-link dropdown-toggle arrow-none me-0" title="Mi carrito de compras">
-            <i class="ti ti-shopping-cart"></i>
-            <span class="badge bg-warning pc-h-badge">0</span>
-        </a>
-        <a class="pc-head-link dropdown-toggle arrow-none me-0" ngbDropdownToggle title="Notificaciones">
-            <i class="ti ti-bell"></i>
-            <span class="badge bg-success pc-h-badge">3</span>
-        </a>
-        <div class="dropdown-menu dropdown-notification dropdown-menu-end pc-h-dropdown" ngbDropdownMenu>
-            <!-- Contenido de notificaciones (mantener igual) -->
-            <div class="dropdown-header d-flex align-items-center justify-content-between">
-                <h5 class="m-0">Notificación</h5>
-                <a href="javascript:" class="pc-head-link bg-transparent">
-                    <i class="ti ti-circle-check text-success"></i>
-                </a>
-            </div>
-            <div class="dropdown-divider"></div>
-            <ng-scrollbar style="height: calc(100vh - 300px)" visibility="hover">
-                <div class="dropdown-header px-0 text-wrap header-notification-scroll">
-                    <div class="list-group list-group-flush w-100">
-                        <a class="list-group-item list-group-item-action">
-                            <div class="d-flex">
-                                <div class="flex-shrink-0">
-                                    <div class="user-avtar bg-light-success">
-                                        <i class="ti ti-gift"></i>
-                                    </div>
-                                </div>
-                                <div class="flex-grow-1 ms-1">
-                                    <span class="float-end text-muted">3:00 AM</span>
-                                    <p class="text-body mb-1"> Mi <b>notificacion</b> de aviso. </p>
-                                    <span class="text-muted">2 min ago</span>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-            </ng-scrollbar>
-            <div class="dropdown-divider"></div>
-            <div class="text-center py-2">
-                <a href="javascript:" class="link-primary">Ver Todos</a>
-            </div>
-        </div>
-    </li>
 
-    <!-- Perfil de usuario -->
     <li class="dropdown pc-h-item header-user-profile" ngbDropdown>
-        <a class="pc-head-link dropdown-toggle arrow-none me-0" ngbDropdownToggle>
-            <!-- Avatar con imagen o iniciales -->
+        <a class="pc-head-link dropdown-toggle arrow-none me-0 d-flex align-items-center" ngbDropdownToggle>
             <div *ngIf="fotoPerfil; else avatarIniciales" class="user-avatar-container">
-                <img [src]="fotoPerfil" alt="user-image" class="user-avtar" />
+                <img [src]="fotoPerfil" alt="user-image" class="user-avtar shadow-sm" />
             </div>
             <ng-template #avatarIniciales>
-                <div class="user-avtar-iniciales">
+                <div class="user-avtar-iniciales shadow-sm">
                     {{ iniciales }}
                 </div>
             </ng-template>
-            <span class="fw-lighter">{{ nombreCompleto }}</span>
+            <span class="fw-bold ms-2">{{ nombreCompleto }}</span>
+            <i class="ti ti-chevron-down ms-2 text-muted" style="font-size: 14px;"></i>
         </a>
 
-        <!-- Dropdown del perfil -->
-        <div class="dropdown-menu dropdown-user-profile dropdown-menu-end pc-h-dropdown" ngbDropdownMenu>
-            <!-- Header con datos del usuario -->
-            <div class="dropdown-header">
-                <div class="d-flex mb-1">
-                    <div class="flex-shrink-0">
-                        <div *ngIf="fotoPerfil; else avatarSmall" class="user-avatar-container">
-                            <img [src]="fotoPerfil" alt="user-image" class="user-avtar wid-35" />
-                        </div>
-                        <ng-template #avatarSmall>
-                            <div class="user-avtar-iniciales small">
-                                {{ iniciales }}
-                            </div>
-                        </ng-template>
-                    </div>
-                    <div class="flex-grow-1 ms-2">
-                        <p class="mb-1 fw-bold">{{ nombreCompleto }}</p>
-                        <span class="text-muted small">{{ cargo }}</span>
-                    </div>
-                </div>
-                <!-- Mostrar roles si existen -->
-                <div class="mt-2" *ngIf="currentUser?.roles?.length">
-                    <span class="badge bg-light-primary text-primary me-1" *ngFor="let rol of currentUser?.roles">
-                        {{ rol.nombre }}
-                    </span>
+        <div class="dropdown-menu dropdown-user-profile dropdown-menu-end pc-h-dropdown shadow border-0 mt-2" ngbDropdownMenu>
+            
+            <div class="dropdown-header px-4 py-3 bg-light border-bottom rounded-top">
+                <span class="text-muted small d-block mb-1">Sesión iniciada como</span>
+                <div class="d-flex align-items-center">
+                    <i class="ti ti-briefcase text-primary me-2"></i>
+                    <span class="fw-bold text-dark">{{ cargo }}</span>
                 </div>
             </div>
 
-            <!-- Menú de opciones -->
-            <ul ngbNav #nav="ngbNav" class="nav drp-tabs nav-fill nav-tabs">
-                <li ngbNavItem="1">
-                    <hr>
-                    <ng-template ngbNavContent>
-                        <div>
-                            <a href="javascript:" class="dropdown-item" (click)="abrirModalPerfil()">
-                                <i class="ti ti-user"></i>
-                                <span class="fw-lighter">Mi Perfil</span>
-                            </a>
-                        </div>
-                        <div>
-                            <a href="javascript:" class="dropdown-item">
-                                <i class="ti ti-file-invoice"></i>
-                                <span class="fw-lighter">Guía rápida</span>
-                            </a>
-                        </div>
-                        <hr>
-                        <div>
-                            <a href="javascript:" class="dropdown-item text-danger" (click)="logout()">
-                                <i class="ti ti-power"></i>
-                                <span class="fw-lighter">Salir del Sistema</span>
-                            </a>
-                        </div>
-                    </ng-template>
-                </li>
-            </ul>
-            <div [ngbNavOutlet]="nav"></div>
+            <div class="p-2">
+                <a href="javascript:" class="dropdown-item rounded py-2 mb-1 d-flex align-items-center" (click)="abrirModalPerfil()">
+                    <i class="ti ti-user fs-5 text-primary me-2"></i>
+                    <span>Mi Perfil</span>
+                </a>
+                
+                <a href="javascript:" class="dropdown-item rounded py-2 d-flex align-items-center">
+                    <i class="ti ti-file-invoice fs-5 text-info me-2"></i>
+                    <span>Guía rápida</span>
+                </a>
+                
+                <div class="dropdown-divider my-2"></div>
+                
+                <a href="javascript:" class="dropdown-item rounded py-2 d-flex align-items-center hover-danger" (click)="logout()">
+                    <i class="ti ti-power fs-5 me-2"></i>
+                    <span class="fw-bold">Salir del Sistema</span>
+                </a>
+            </div>
         </div>
     </li>
 </ul>

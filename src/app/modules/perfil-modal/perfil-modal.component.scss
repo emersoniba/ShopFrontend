@@ -20,19 +20,7 @@
             object-fit: cover;
         }
     }
-    .foto-placeholder {
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 3rem;
-        @media (max-width: 768px) {
-            font-size: 2.5rem;
-        }
-    }
+    
     .foto-overlay {
         position: absolute;
         top: 0;
@@ -117,19 +105,6 @@ textarea[disabled] {
     }
 }
 
-.btn-primary {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
-    border: none !important;
-    color: white !important;
-    &:hover:not(:disabled) {
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-    }
-    &:disabled {
-        opacity: 0.6;
-        cursor: not-allowed;
-    }
-}
 
 .btn-danger {
     background-color: #dc3545 !important;
@@ -141,47 +116,7 @@ textarea[disabled] {
     }
 }
 
-// Ajustes del modal
-::ng-deep .mat-mdc-dialog-container {
-    padding: 0 !important;
-    border-radius: 12px !important;
-    overflow: hidden !important;
-    .mat-mdc-dialog-title {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        padding: 1rem 1.5rem;
-        margin: 0;
-        font-size: 1.25rem;
-        b {
-            font-weight: 600;
-        }
-    }
-    .mat-mdc-dialog-content {
-        padding: 1.5rem !important;
-        margin: 0 !important;
-        max-height: calc(90vh - 130px);
-        overflow-y: auto;
-        &::-webkit-scrollbar {
-            width: 6px;
-        }
-        &::-webkit-scrollbar-track {
-            background: #f1f1f1;
-        }
-        &::-webkit-scrollbar-thumb {
-            background: #c1c1c1;
-            border-radius: 3px;
-            &:hover {
-                background: #a8a8a8;
-            }
-        }
-    }
-    .mat-mdc-dialog-actions {
-        padding: 1rem 1.5rem;
-        margin: 0;
-        border-top: 1px solid #e9ecef;
-        background-color: #f8f9fa;
-    }
-}
+
 
 // Texto de error
 .text-danger {

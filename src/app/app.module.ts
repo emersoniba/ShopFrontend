@@ -27,7 +27,6 @@ import { MatNativeDateModule } from '@angular/material/core';
 //
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card'; // <-- añadir
-import { PaginationInterceptor } from './modules/authentication/interceptor/pagination.interceptor';
 // ...otros imports...
 
 @NgModule({
@@ -67,11 +66,6 @@ import { PaginationInterceptor } from './modules/authentication/interceptor/pagi
     ],
     bootstrap: [AppComponent],
     providers: [
-        {
-            provide: HTTP_INTERCEPTORS,
-            useClass: PaginationInterceptor,
-            multi: true
-        },
         provideAnimationsAsync(),
         {
             provide: HTTP_INTERCEPTORS,
