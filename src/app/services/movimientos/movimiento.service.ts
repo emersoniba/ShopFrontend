@@ -17,7 +17,7 @@ export class MovimientoService {
 
   getMovimientos(filtros?: any): Observable<Movimiento[]> {
     let params = new HttpParams();
-    
+
     // Aquí puedes filtrar por estado, tipo, o fechas desde el frontend
     if (filtros) {
       Object.entries(filtros).forEach(([key, value]) => {
@@ -56,6 +56,22 @@ export class MovimientoService {
    */
   patchEstadoMovimiento(id: number, estadoId: number): Observable<Movimiento> {
     return this.http.patch<any>(`${this.apiUrl}/movimientos/${id}/`, { estado: estadoId }).pipe(
+      map(res => res.data || res)
+    );
+  }
+  deleteMovimiento(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/movimientos/${id}/`);
+  }
+
+  updateMovimiento(id: number, data: MovimientoDTO): Observable<Movimiento> {
+    return this.http.put<any>(`${this.apiUrl}/movimientos/${id}/`, data).pipe(
+      map(res => res.data || res)
+    );
+  }
+
+  anularMovimiento(id: number): Observable<any> {
+    // Apunta a nuestra nueva función @action en Django
+    return this.http.post<any>(`${this.apiUrl}/movimientos/${id}/anular/`, {}).pipe(
       map(res => res.data || res)
     );
   }

@@ -52,6 +52,7 @@ export class MaterialFormComponent implements OnInit {
     if (this.isEdit && this.data.producto) {
       this.labelForm = 'Actualizar Producto';
       this.cargarDatosProducto(this.data.producto);
+      this.form.get('costo_promedio')?.disable();
     }
   }
 

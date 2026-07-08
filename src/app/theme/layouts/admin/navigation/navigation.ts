@@ -71,6 +71,17 @@ export const NavigationItems: NavigationItem[] = [
 				target: false,
 				breadcrumbs: true,
 				roles: ['SuperAdmin', 'Almacenero']
+			},
+			{
+				id: 'movimientos',
+				title: 'Movimientos',
+				type: 'item',
+				classes: 'nav-item',
+				url: '/movimientos',
+				icon: 'ti ti-exchange',
+				target: false,
+				breadcrumbs: true,
+				roles: ['SuperAdmin', 'Almacenero']
 			}
 		]
 	},

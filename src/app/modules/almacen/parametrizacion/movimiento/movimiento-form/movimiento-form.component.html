@@ -1,0 +1,164 @@
+<div mat-dialog-title class="d-flex justify-content-between align-items-center bg-primary text-white p-3 m-0">
+	<h3 class="m-0 text-white fw-bold">Registrar Movimiento</h3>
+	<button type="button" class="btn-close btn-close-white" mat-dialog-close [disabled]="loading"></button>
+</div>
+
+<div mat-dialog-content class="p-0">
+	<form [formGroup]="formCabecera" class="p-3">
+		<h5 class="text-primary mb-3"><i class="ti ti-file-description"></i> Datos Generales</h5>
+		<div class="row">
+			<div class="col-md-4 mb-2">
+				<mat-form-field class="w-100" appearance="fill">
+					<mat-label>Tipo de Movimiento *</mat-label>
+					<mat-select formControlName="tipo_movimiento">
+						@for (t of tiposMovimiento; track t.id) {
+							<mat-option [value]="t.id">{{ t.nombre }}</mat-option>
+						}
+					</mat-select>
+				</mat-form-field>
+			</div>
+			<div class="col-md-4 mb-2">
+				<mat-form-field class="w-100" appearance="fill">
+					<mat-label>Estado *</mat-label>
+					<mat-select formControlName="estado">
+						@for (e of estados; track e.id) {
+							<mat-option [value]="e.id">{{ e.nombre }}</mat-option>
+						}
+					</mat-select>
+				</mat-form-field>
+			</div>
+			<div class="col-md-4 mb-2">
+				<mat-form-field class="w-100" appearance="fill">
+					<mat-label>Proveedor</mat-label>
+					<mat-select formControlName="proveedor">
+						@for (p of proveedores; track p.id) {
+							<mat-option [value]="p.id">{{ p.razon_social }}</mat-option>
+						}
+					</mat-select>
+				</mat-form-field>
+			</div>
+			<div class="col-md-6 mb-2">
+				<mat-form-field class="w-100" appearance="fill">
+					<mat-label>Almacén Destino (Ingresos)</mat-label>
+					<mat-select formControlName="almacen_destino">
+						@for (a of almacenes; track a.id) {
+							<mat-option [value]="a.id">{{ a.nombre }}</mat-option>
+						}
+					</mat-select>
+				</mat-form-field>
+			</div>
+			<div class="col-md-6 mb-2">
+				<mat-form-field class="w-100" appearance="fill">
+					<mat-label>Almacén Origen (Salidas)</mat-label>
+					<mat-select formControlName="almacen_origen">
+						@for (a of almacenes; track a.id) {
+							<mat-option [value]="a.id">{{ a.nombre }}</mat-option>
+						}
+					</mat-select>
+				</mat-form-field>
+			</div>
+		</div>
+
+		<hr />
+		<h5 class="text-primary mb-3"><i class="ti ti-box"></i> Detalle de Productos</h5>
+		<div class="row align-items-center bg-light p-3 rounded mb-3">
+			<div class="col-md-12 mb-2 text-muted small">
+				<i class="ti ti-info-circle"></i> Si compra productos sueltos, deje "Unidades por Paquete" en 1.
+			</div>
+
+			<div class="col-md-4">
+				<mat-form-field class="w-100 mb-0" appearance="outline">
+					<mat-label>Seleccionar Producto</mat-label>
+					<mat-select [formControl]="productoControl">
+						@for (p of productos; track p.id) {
+							<mat-option [value]="p">{{ p.nombre }}</mat-option>
+						}
+					</mat-select>
+				</mat-form-field>
+			</div>
+			<div class="col-md-2">
+				<mat-form-field class="w-100 mb-0" appearance="outline">
+					<mat-label>Cant. Paquetes</mat-label>
+					<input matInput type="number" [formControl]="cantidadPaquetesControl" min="0.01" />
+				</mat-form-field>
+			</div>
+			<div class="col-md-2">
+				<mat-form-field class="w-100 mb-0" appearance="outline">
+					<mat-label>Unid. por Paq.</mat-label>
+					<input matInput type="number" [formControl]="unidadesPorPaqueteControl" min="1" placeholder="Ej: 6" />
+				</mat-form-field>
+			</div>
+			<div class="col-md-2">
+				<mat-form-field class="w-100 mb-0" appearance="outline">
+					<mat-label>Costo x Paq. (Bs)</mat-label>
+					<input matInput type="number" [formControl]="costoPorPaqueteControl" min="0" />
+				</mat-form-field>
+			</div>
+			<div class="col-md-2 text-end">
+				<button
+					type="button"
+					class="btn btn-primary w-100"
+					style="height: 50px"
+					(click)="agregarDetalle()"
+					[disabled]="!productoControl.value || cantidadPaquetesControl.invalid"
+				>
+					<i class="ti ti-plus"></i> Agregar
+				</button>
+			</div>
+		</div>
+
+		<div class="table-responsive">
+			<table class="table table-hover table-bordered text-center">
+				<thead class="table-light">
+					<tr>
+						<th>Producto</th>
+						<th>Cant.</th>
+						<th>Precio U.</th>
+						<th>Subtotal</th>
+						<th>Acción</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr *ngIf="detalles.length === 0">
+						<td colspan="5" class="text-muted">No se han agregado productos.</td>
+					</tr>
+					<tr *ngFor="let item of detalles; let i = index">
+						<td class="text-start">{{ item.producto_nombre }}</td>
+						<td>{{ item.cantidad }}</td>
+						<td>Bs. {{ item.precio_unitario_compra | number: '1.2-2' }}</td>
+						<td class="fw-bold">Bs. {{ item.cantidad * item.precio_unitario_compra | number: '1.2-2' }}</td>
+						<td>
+							<button type="button" class="btn btn-sm btn-outline-danger" (click)="eliminarDetalle(i)">
+								<i class="ti ti-trash"></i>
+							</button>
+						</td>
+					</tr>
+				</tbody>
+				<tfoot>
+					<tr>
+						<th colspan="3" class="text-end">TOTAL MOVIMIENTO:</th>
+						<th class="text-primary fs-5">Bs. {{ calcularTotal() | number: '1.2-2' }}</th>
+						<th></th>
+					</tr>
+				</tfoot>
+			</table>
+		</div>
+	</form>
+</div>
+
+<div mat-dialog-actions class="px-3 pb-3 bg-light d-flex justify-content-end m-0 border-top">
+	<button type="button" mat-button class="btn btn-outline-secondary btn-round" mat-dialog-close [disabled]="loading">
+		<i class="ti ti-x"></i> Cancelar
+	</button>
+	<button
+		type="button"
+		mat-button
+		class="btn btn-primary btn-round ms-2"
+		(click)="guardarMovimiento()"
+		[disabled]="formCabecera.invalid || detalles.length === 0 || loading"
+	>
+		<i class="ti ti-device-floppy"></i>
+		<span *ngIf="!loading">Guardar Movimiento</span>
+		<span *ngIf="loading"><span class="spinner-border spinner-border-sm me-1"></span>Procesando...</span>
+	</button>
+</div>

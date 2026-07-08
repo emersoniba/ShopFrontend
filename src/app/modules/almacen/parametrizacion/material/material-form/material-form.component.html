@@ -1,146 +1,151 @@
 <h3 mat-dialog-title>
-    <b>{{labelForm}}</b>
+	<b>{{ labelForm }}</b>
 </h3>
 
 <div mat-dialog-content>
-    <form [formGroup]="form" class="row mt-2">
-        
-        <div class="row mb-4 justify-content-center">
-            <div class="col-12 text-center">
-                <div class="position-relative d-inline-block">
-                    <img [src]="imagenPreview || 'assets/images/default-product.png'" 
-                         alt="Preview" 
-                         class="img-thumbnail rounded shadow-sm"
-                         style="width: 150px; height: 150px; object-fit: cover;">
-                    
-                    <div class="mt-2">
-                        <label class="btn btn-sm btn-outline-secondary w-100 cursor-pointer d-flex align-items-center justify-content-center">
-                            <mat-icon class="me-1" style="font-size: 18px; width: 18px; height: 18px;">cloud_upload</mat-icon> Subir Imagen
-                            <input type="file" class="d-none" accept="image/*" (change)="onFileSelected($event)">
-                        </label>
-                    </div>
-                </div>
-            </div>
-        </div>
+	<form [formGroup]="form" class="row mt-2">
+		<div class="row mb-4 justify-content-center">
+			<div class="col-12 text-center">
+				<div class="position-relative d-inline-block">
+					<img
+						[src]="imagenPreview || 'assets/images/default-product.png'"
+						alt="Preview"
+						class="img-thumbnail rounded shadow-sm"
+						style="width: 150px; height: 150px; object-fit: cover"
+					/>
 
-        <div class="row">
-            <div class="col-12 mb-2">
-                <mat-form-field class="w-100" appearance="fill">
-                    <mat-label>Nombre del Producto *</mat-label>
-                    <mat-icon matPrefix>inventory</mat-icon>
-                    <input matInput formControlName="nombre" placeholder="Ej. Ron Flor de Caña 750ml">
-                    
-                    @if(form.get('nombre')?.hasError('required') && form.get('nombre')?.touched){
-                        <mat-error>El nombre es requerido</mat-error>
-                    }
-                    @if(form.get('nombre')?.hasError('maxlength')){
-                        <mat-error>Máximo 200 caracteres</mat-error>
-                    }
-                </mat-form-field>
-            </div>
+					<div class="mt-2">
+						<label
+							class="btn btn-sm btn-outline-secondary w-100 cursor-pointer d-flex align-items-center justify-content-center"
+						>
+							<mat-icon class="me-1" style="font-size: 18px; width: 18px; height: 18px">cloud_upload</mat-icon> Subir Imagen
+							<input type="file" class="d-none" accept="image/*" (change)="onFileSelected($event)" />
+						</label>
+					</div>
+				</div>
+			</div>
+		</div>
 
-            <div class="col-md-4 col-sm-12 mb-2">
-                <mat-form-field class="w-100" appearance="fill">
-                    <mat-label>Categoría *</mat-label>
-                    <mat-icon matPrefix>category</mat-icon>
-                    <mat-select formControlName="categoria">
-                        @for(item of categorias; track item.id){
-                            <mat-option [value]="item.id">{{ item.nombre }}</mat-option>
-                        }
-                    </mat-select>
-                    @if(form.get('categoria')?.hasError('required') && form.get('categoria')?.touched){
-                        <mat-error>Seleccione una categoría</mat-error>
-                    }
-                </mat-form-field>
-            </div>
+		<div class="row">
+			<div class="col-12 mb-2">
+				<mat-form-field class="w-100" appearance="fill">
+					<mat-label>Nombre del Producto *</mat-label>
+					<mat-icon matPrefix>inventory</mat-icon>
+					<input matInput formControlName="nombre" placeholder="Ej. Ron Flor de Caña 750ml" />
 
-            <div class="col-md-4 col-sm-12 mb-2">
-                <mat-form-field class="w-100" appearance="fill">
-                    <mat-label>Tipo *</mat-label>
-                    <mat-icon matPrefix>label</mat-icon>
-                    <mat-select formControlName="tipo_producto">
-                        @for(item of tiposProducto; track item.id){
-                            <mat-option [value]="item.id">{{ item.nombre }}</mat-option>
-                        }
-                    </mat-select>
-                    @if(form.get('tipo_producto')?.hasError('required') && form.get('tipo_producto')?.touched){
-                        <mat-error>Seleccione el tipo</mat-error>
-                    }
-                </mat-form-field>
-            </div>
+					@if (form.get('nombre')?.hasError('required') && form.get('nombre')?.touched) {
+						<mat-error>El nombre es requerido</mat-error>
+					}
+					@if (form.get('nombre')?.hasError('maxlength')) {
+						<mat-error>Máximo 200 caracteres</mat-error>
+					}
+				</mat-form-field>
+			</div>
 
-            <div class="col-md-4 col-sm-12 mb-2">
-                <mat-form-field class="w-100" appearance="fill">
-                    <mat-label>Unidad *</mat-label>
-                    <mat-icon matPrefix>straighten</mat-icon>
-                    <mat-select formControlName="unidad_medida">
-                        @for(item of unidadesMedida; track item.id){
-                            <mat-option [value]="item.id">{{ item.nombre }} ({{ item.abreviatura }})</mat-option>
-                        }
-                    </mat-select>
-                    @if(form.get('unidad_medida')?.hasError('required') && form.get('unidad_medida')?.touched){
-                        <mat-error>Seleccione la unidad</mat-error>
-                    }
-                </mat-form-field>
-            </div>
+			<div class="col-md-4 col-sm-12 mb-2">
+				<mat-form-field class="w-100" appearance="fill">
+					<mat-label>Categoría *</mat-label>
+					<mat-icon matPrefix>category</mat-icon>
+					<mat-select formControlName="categoria">
+						@for (item of categorias; track item.id) {
+							<mat-option [value]="item.id">{{ item.nombre }}</mat-option>
+						}
+					</mat-select>
+					@if (form.get('categoria')?.hasError('required') && form.get('categoria')?.touched) {
+						<mat-error>Seleccione una categoría</mat-error>
+					}
+				</mat-form-field>
+			</div>
 
-            <div class="col-md-4 col-sm-12 mb-2">
-                <mat-form-field class="w-100" appearance="fill">
-                    <mat-label>Precio Venta (Bs.) *</mat-label>
-                    <mat-icon matPrefix>attach_money</mat-icon>
-                    <input matInput type="number" formControlName="precio_venta" step="0.01" min="0">
-                    @if(form.get('precio_venta')?.hasError('required') && form.get('precio_venta')?.touched){
-                        <mat-error>Precio requerido</mat-error>
-                    }
-                    @if(form.get('precio_venta')?.hasError('min')){
-                        <mat-error>El precio no puede ser negativo</mat-error>
-                    }
-                </mat-form-field>
-            </div>
+			<div class="col-md-4 col-sm-12 mb-2">
+				<mat-form-field class="w-100" appearance="fill">
+					<mat-label>Tipo *</mat-label>
+					<mat-icon matPrefix>label</mat-icon>
+					<mat-select formControlName="tipo_producto">
+						@for (item of tiposProducto; track item.id) {
+							<mat-option [value]="item.id">{{ item.nombre }}</mat-option>
+						}
+					</mat-select>
+					@if (form.get('tipo_producto')?.hasError('required') && form.get('tipo_producto')?.touched) {
+						<mat-error>Seleccione el tipo</mat-error>
+					}
+				</mat-form-field>
+			</div>
 
-            <div class="col-md-4 col-sm-12 mb-2">
-                <mat-form-field class="w-100" appearance="fill">
-                    <mat-label>Costo Promedio (Bs.) *</mat-label>
-                    <mat-icon matPrefix>price_check</mat-icon>
-                    <input matInput type="number" formControlName="costo_promedio" step="0.01" min="0">
-                    @if(form.get('costo_promedio')?.hasError('required') && form.get('costo_promedio')?.touched){
-                        <mat-error>Costo requerido</mat-error>
-                    }
-                    @if(form.get('costo_promedio')?.hasError('min')){
-                        <mat-error>El costo no puede ser negativo</mat-error>
-                    }
-                </mat-form-field>
-            </div>
+			<div class="col-md-4 col-sm-12 mb-2">
+				<mat-form-field class="w-100" appearance="fill">
+					<mat-label>Unidad *</mat-label>
+					<mat-icon matPrefix>straighten</mat-icon>
+					<mat-select formControlName="unidad_medida">
+						@for (item of unidadesMedida; track item.id) {
+							<mat-option [value]="item.id">{{ item.nombre }} ({{ item.abreviatura }})</mat-option>
+						}
+					</mat-select>
+					@if (form.get('unidad_medida')?.hasError('required') && form.get('unidad_medida')?.touched) {
+						<mat-error>Seleccione la unidad</mat-error>
+					}
+				</mat-form-field>
+			</div>
 
-            <div class="col-md-4 col-sm-12 mb-2">
-                <mat-form-field class="w-100" appearance="fill">
-                    <mat-label>Capacidad *</mat-label>
-                    <mat-icon matPrefix>scale</mat-icon>
-                    <input matInput type="number" formControlName="capacidad" step="0.01" min="0.01" placeholder="Ej. 750">
-                    @if(form.get('capacidad')?.hasError('required') && form.get('capacidad')?.touched){
-                        <mat-error>Capacidad requerida</mat-error>
-                    }
-                    @if(form.get('capacidad')?.hasError('min')){
-                        <mat-error>Debe ser mayor a 0</mat-error>
-                    }
-                </mat-form-field>
-            </div>
+			<div class="col-md-4 col-sm-12 mb-2">
+				<mat-form-field class="w-100" appearance="fill">
+					<mat-label>Precio Venta (Bs.) *</mat-label>
+					<mat-icon matPrefix>attach_money</mat-icon>
+					<input matInput type="number" formControlName="precio_venta" step="0.01" min="0" />
+					@if (form.get('precio_venta')?.hasError('required') && form.get('precio_venta')?.touched) {
+						<mat-error>Precio requerido</mat-error>
+					}
+					@if (form.get('precio_venta')?.hasError('min')) {
+						<mat-error>El precio no puede ser negativo</mat-error>
+					}
+				</mat-form-field>
+			</div>
 
-            <div class="col-12 mb-2">
-                <mat-checkbox formControlName="activo" color="primary">Producto Activo</mat-checkbox>
-            </div>
-        </div>
-    </form>
+			<div class="col-md-4 col-sm-12 mb-2">
+				<mat-form-field class="w-100" appearance="fill">
+					<mat-label>Costo Promedio (Bs.) *</mat-label>
+					<mat-icon matPrefix>price_check</mat-icon>
+					<input matInput type="number" formControlName="costo_promedio" step="0.01" min="0" />
+
+					<mat-hint *ngIf="isEdit" class="text-primary" style="font-size: 11px">
+						<i class="ti ti-info-circle"></i> Calculado por Compras
+					</mat-hint>
+
+					@if (form.get('costo_promedio')?.hasError('required') && form.get('costo_promedio')?.touched) {
+						<mat-error>Costo requerido</mat-error>
+					}
+				</mat-form-field>
+			</div>
+
+			<div class="col-md-4 col-sm-12 mb-2">
+				<mat-form-field class="w-100" appearance="fill">
+					<mat-label>Capacidad *</mat-label>
+					<mat-icon matPrefix>scale</mat-icon>
+					<input matInput type="number" formControlName="capacidad" step="0.01" min="0.01" placeholder="Ej. 750" />
+					@if (form.get('capacidad')?.hasError('required') && form.get('capacidad')?.touched) {
+						<mat-error>Capacidad requerida</mat-error>
+					}
+					@if (form.get('capacidad')?.hasError('min')) {
+						<mat-error>Debe ser mayor a 0</mat-error>
+					}
+				</mat-form-field>
+			</div>
+
+			<div class="col-12 mb-2">
+				<mat-checkbox formControlName="activo" color="primary">Producto Activo</mat-checkbox>
+			</div>
+		</div>
+	</form>
 </div>
 
 <div mat-dialog-actions align="end" class="px-3 pb-3">
-    <button type="button" mat-button class="btn btn-secondary btn-round" mat-dialog-close [disabled]="loading">
-        <i class="ti ti-x"></i> Cancelar
-    </button>
-    <button type="button" mat-button class="btn btn-primary btn-round ms-2" (click)="onSubmit()" [disabled]="form.invalid || loading">
-        <i class="ti ti-send"></i> {{labelForm}}
-        @if(loading){
-            <mat-spinner diameter="20" class="ms-2"></mat-spinner>
-        }
-    </button>
+	<button type="button" mat-button class="btn btn-secondary btn-round" mat-dialog-close [disabled]="loading">
+		<i class="ti ti-x"></i> Cancelar
+	</button>
+	<button type="button" mat-button class="btn btn-primary btn-round ms-2" (click)="onSubmit()" [disabled]="form.invalid || loading">
+		<i class="ti ti-send"></i> {{ labelForm }}
+		@if (loading) {
+			<mat-spinner diameter="20" class="ms-2"></mat-spinner>
+		}
+	</button>
 </div>

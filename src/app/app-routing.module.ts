@@ -6,7 +6,7 @@ import { AdminComponent } from './theme/layouts/admin/admin.component';
 import { AuthGuard } from './modules/authentication/guard/auth.guard';
 import { PersonalComponent } from './modules/almacen/personal/personal.component';
 import { MaterialComponent } from './modules/almacen/parametrizacion/material/material.component';
-//import { ShopComponent } from './modules/shop/shop.component';
+import { MovimientoComponent } from './modules/almacen/parametrizacion/movimiento/movimiento.component';
 
 const routes: Routes = [
 	{
@@ -34,6 +34,12 @@ const routes: Routes = [
 				component: MaterialComponent,
 				canActivate: [AuthGuard],
 				data: { roles: ['SuperAdmin', 'AdminTienda', 'Cajero'] }
+			},
+			{
+				path: 'movimientos',
+				component: MovimientoComponent,
+				canActivate: [AuthGuard],
+				data: { roles: ['SuperAdmin', 'AdminTienda', 'Cajero'] }
 			}
 		]
 	},
@@ -48,4 +54,4 @@ const routes: Routes = [
 	imports: [RouterModule.forRoot(routes)],
 	exports: [RouterModule]
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }
