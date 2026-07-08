@@ -7,6 +7,7 @@ import { AuthGuard } from './modules/authentication/guard/auth.guard';
 import { PersonalComponent } from './modules/almacen/personal/personal.component';
 import { MaterialComponent } from './modules/almacen/parametrizacion/material/material.component';
 import { MovimientoComponent } from './modules/almacen/parametrizacion/movimiento/movimiento.component';
+import { VentasComponent } from './modules/almacen/parametrizacion/ventas/ventas.component';
 
 const routes: Routes = [
 	{
@@ -21,23 +22,30 @@ const routes: Routes = [
 			{
 				path: 'dashboard/default',
 				loadComponent: () => import('./modules/dashboard/dashboard.component'),
-				canActivate: [AuthGuard]
+				canActivate: [AuthGuard],
+				//data: { roles: ['SuperAdmin', 'AdminTienda'] }
 			},
 			{
 				path: 'usuario',
 				component: PersonalComponent,
 				canActivate: [AuthGuard],
-				data: { roles: ['SuperAdmin', 'AdminTienda', 'Cajero'] }
+				data: { roles: ['SuperAdmin', 'AdminTienda'] }
 			},
 			{
 				path: 'material',
 				component: MaterialComponent,
 				canActivate: [AuthGuard],
-				data: { roles: ['SuperAdmin', 'AdminTienda', 'Cajero'] }
+				data: { roles: ['SuperAdmin', 'AdminTienda'] }
 			},
 			{
 				path: 'movimientos',
 				component: MovimientoComponent,
+				canActivate: [AuthGuard],
+				data: { roles: ['SuperAdmin', 'AdminTienda'] }
+			},
+			{
+				path: 'ventas',
+				component: VentasComponent,
 				canActivate: [AuthGuard],
 				data: { roles: ['SuperAdmin', 'AdminTienda', 'Cajero'] }
 			}

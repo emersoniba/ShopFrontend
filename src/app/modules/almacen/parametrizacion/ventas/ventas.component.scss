@@ -1,0 +1,114 @@
+/* src/app/components/ventas/ventas.component.scss */
+
+.pos-grid {
+    /* Oculta la barra de scroll para un look más limpio, pero permite el scroll */
+    &::-webkit-scrollbar {
+        width: 6px;
+    }
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    &::-webkit-scrollbar-thumb {
+        background: #e0e0e0;
+        border-radius: 10px;
+    }
+}
+
+.product-card {
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    
+    .product-img-container {
+        height: 100px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        
+        img {
+            max-height: 100%;
+            object-fit: contain;
+        }
+    }
+
+    &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 15px rgba(0,0,0,0.1) !important;
+        border-color: #667eea !important;
+    }
+
+    /* Estilo cuando no hay stock */
+    &.bg-light-danger {
+        background-color: #fff5f5 !important;
+        opacity: 0.65;
+        pointer-events: none; /* Deshabilita el clic */
+        filter: grayscale(100%);
+    }
+}
+
+/* Colores de badges de stock */
+.bg-light-success {
+    background-color: rgba(40, 167, 69, 0.15);
+    border: 1px solid rgba(40, 167, 69, 0.3);
+}
+.bg-light-danger {
+    background-color: rgba(220, 53, 69, 0.15);
+    border: 1px solid rgba(220, 53, 69, 0.3);
+}
+/* =========================================
+   NUEVO: ESTILOS PARA LOS TABS DE CATEGORÍAS
+   ========================================= */
+.category-tabs-container {
+    .hide-scrollbar {
+        -ms-overflow-style: none;  /* IE y Edge */
+        scrollbar-width: none;     /* Firefox */
+        &::-webkit-scrollbar {
+            display: none;         /* Chrome, Safari, Opera */
+        }
+    }
+    
+    .nav-link {
+        border-radius: 25px;
+        padding: 0.5rem 1.2rem;
+        margin-right: 0.5rem;
+        color: #6c757d;
+        background-color: #f4f6f8;
+        font-weight: 600;
+        font-size: 0.95rem;
+        transition: all 0.2s ease;
+        border: 1px solid transparent;
+        
+        &:hover {
+            background-color: #e9ecef;
+        }
+        
+        &.active {
+            background-color: #667eea; /* Color primary de tu sistema */
+            color: white;
+            box-shadow: 0 4px 10px rgba(102, 126, 234, 0.4);
+            border-color: #667eea;
+        }
+    }
+}
+/* =========================================
+   RESPONSIVIDAD (MÓVILES Y TABLETS)
+   ========================================= */
+@media (max-width: 991px) {
+    /* En móvil, el catálogo no debe ocupar todo el alto para permitir ver el carrito abajo */
+    .col-lg-8 {
+        height: auto !important; 
+    }
+    .pos-grid {
+        max-height: 55vh; /* Limita el scroll del catálogo en celular */
+        padding-bottom: 1rem;
+    }
+    
+    /* Achicamos textos en celulares para que quepan 2 columnas */
+    .product-card {
+        .product-img-container {
+            height: 80px;
+        }
+        h5 { font-size: 0.95rem !important; }
+        h4 { font-size: 1.15rem !important; }
+        .badge { font-size: 0.75rem !important; }
+    }
+}

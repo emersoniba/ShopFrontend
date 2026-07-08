@@ -32,7 +32,9 @@ export const NavigationItems: NavigationItem[] = [
 				classes: 'nav-item',
 				url: '/dashboard/default',
 				icon: 'ti ti-dashboard',
-				breadcrumbs: false
+				breadcrumbs: false,
+				//roles: ['SuperAdmin', 'AdminTienda']
+
 			}
 		]
 	},
@@ -52,6 +54,17 @@ export const NavigationItems: NavigationItem[] = [
 				target: false,
 				breadcrumbs: true,
 				roles: ['SuperAdmin']
+			},
+			{
+				id: 'ventas',
+				title: 'Ventas',
+				type: 'item',
+				classes: 'nav-item',
+				url: '/ventas',
+				icon: 'ti ti-shopping-cart',
+				target: false,
+				breadcrumbs: true,
+				roles: ['SuperAdmin', 'AdminTienda', 'Cajero']
 			}
 		]
 	},
