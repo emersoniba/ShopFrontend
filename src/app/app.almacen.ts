@@ -8,6 +8,7 @@ import { MaterialFormComponent } from './modules/almacen/parametrizacion/materia
 import { MovimientoFormComponent } from './modules/almacen/parametrizacion/movimiento/movimiento-form/movimiento-form.component';
 import { MovimientoComponent } from './modules/almacen/parametrizacion/movimiento/movimiento.component';
 import { VentasComponent } from './modules/almacen/parametrizacion/ventas/ventas.component';
+import { MovimientoDetalleModalComponent } from './modules/almacen/parametrizacion/movimiento/movimiento-detalle-modal/movimiento-detalle-modal.component';
 
 export const AppAlmacenConfig = [
     LoginComponent,
@@ -20,4 +21,5 @@ export const AppAlmacenConfig = [
     MovimientoComponent,
     MovimientoFormComponent,
     VentasComponent,
+    MovimientoDetalleModalComponent,
 ]

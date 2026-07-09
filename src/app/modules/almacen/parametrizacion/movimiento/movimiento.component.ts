@@ -6,13 +6,15 @@ import { FormControl } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { MatDialog } from '@angular/material/dialog';
 import Swal from 'sweetalert2';
+import { SwalAlertService } from 'src/app/utils/util.swal';
 
 import { localeEs } from 'src/app/app.locale.es.grid';
 import { RendererComponent } from '../../bandejas/abrenderer/renderer.component';
 import { Movimiento } from 'src/app/models/movimientos/movimiento.model';
 import { MovimientoService } from 'src/app/services/movimientos/movimiento.service';
 import { MovimientoFormComponent } from './movimiento-form/movimiento-form.component';
-import { SwalAlertService } from 'src/app/utils/util.swal';
+import { MovimientoDetalleModalComponent } from './movimiento-detalle-modal/movimiento-detalle-modal.component';
+import { MovimientoActionRendererComponent } from '../../bandejas/movimiento-action-render/movimiento-action-render.component';
 
 @Component({
     selector: 'app-movimiento',
@@ -34,7 +36,7 @@ export class MovimientoComponent implements OnInit, OnDestroy {
 
     public gridOptions: GridOptions = {
         reactiveCustomComponents: true,
-        components: { actionCellRenderer: RendererComponent },
+        components: { actionCellRenderer: RendererComponent,MovimientoActionRendererComponent },
         context: { componentParent: this },
         rowModelType: 'clientSide',
         defaultColDef: { sortable: true, resizable: true, filter: true, floatingFilter: true }
@@ -48,8 +50,14 @@ export class MovimientoComponent implements OnInit, OnDestroy {
     public paginationNumberFormatter = (params: PaginationNumberFormatterParams) => params.value.toLocaleString();
 
     columnDefs: ColDef[] = [
-        { field: 'id', headerName: 'Opciones', filter: false, minWidth: 115, maxWidth: 115, cellRenderer: RendererComponent, pinned: 'left' },
-        { field: 'id', headerName: 'Nro', filter: 'agNumberColumnFilter', maxWidth: 100 },
+        { field: 'id', headerName: 'Opciones', 
+            filter: false, 
+            minWidth: 140,
+             maxWidth: 140,
+              //cellRenderer: RendererComponent, 
+              cellRenderer: MovimientoActionRendererComponent,
+              pinned: 'left' },
+        { field: 'id', headerName: 'Nro', filter: 'agNumberColumnFilter', maxWidth: 160 },
         {
             field: 'tipo_movimiento_nombre', headerName: 'Tipo', filter: 'agTextColumnFilter', minWidth: 150,
             cellRenderer: (params: any) => `<span class="fw-bold">${params.value || '-'}</span>`
@@ -106,8 +114,8 @@ export class MovimientoComponent implements OnInit, OnDestroy {
 
     public accionNuevo(): void {
         const dialogRef = this.dialog.open(MovimientoFormComponent, {
-            width: '900px', // Un poco más ancho porque tendrá una tabla de productos adentro
-            maxHeight: '95vh',
+            width: '700px', // Un poco más ancho porque tendrá una tabla de productos adentro
+            maxHeight: '75vh',
             disableClose: true,
             data: {}
         });
@@ -121,12 +129,22 @@ export class MovimientoComponent implements OnInit, OnDestroy {
         const { action, data } = event;
         const esBorrador = data.estado_nombre.toLowerCase() === 'borrador';
         const esAnulado = data.estado_nombre.toLowerCase() === 'anulado';
+        if (action?.toLowerCase() === 'view' || action?.toLowerCase() === 'ver') {
+            this.dialog.open(MovimientoDetalleModalComponent, {
+                width: '850px',
+                maxHeight: '90vh',
+                data: data // Pasamos toda la fila, incluyendo los detalles anidados
+            });
+            return; // Salimos de la función para que no evalúe los otros casos
+        }
 
         if (action?.toLowerCase() === 'edit') {
             if (esBorrador) {
                 // Abre el modal pasando los datos
                 const dialogRef = this.dialog.open(MovimientoFormComponent, {
-                    width: '900px', maxHeight: '95vh', disableClose: true,
+                    width: '700px', 
+                    maxHeight: '75vh', 
+                    disableClose: true,
                     data: { movimiento: data }
                 });
                 dialogRef.afterClosed().subscribe(res => { if (res) this.cargarMovimientos(); });

@@ -1,0 +1,77 @@
+<div mat-dialog-title class="bg-primary text-white p-3 d-flex justify-content-between align-items-center m-0">
+    <h4 class="m-0 text-white fw-bold"><i class="ti ti-receipt me-2"></i> Detalles del Movimiento Nro. {{ data.id }}</h4>
+    <button type="button" class="btn-close btn-close-white" mat-dialog-close></button>
+</div>
+
+<div mat-dialog-content class="p-4">
+    <!-- Resumen de la Cabecera -->
+    <div class="row mb-4 bg-light p-3 rounded">
+        <div class="col-md-4 mb-2">
+            <span class="text-muted d-block small">Tipo de Movimiento</span>
+            <span class="fw-bold">{{ data.tipo_movimiento_nombre }}</span>
+        </div>
+        <div class="col-md-4 mb-2">
+            <span class="text-muted d-block small">Estado</span>
+            <span class="badge" [ngClass]="data.estado_nombre === 'Completado' ? 'bg-success' : 'bg-warning'">
+                {{ data.estado_nombre }}
+            </span>
+        </div>
+        <div class="col-md-4 mb-2">
+            <span class="text-muted d-block small">Fecha</span>
+            <span class="fw-bold">{{ data.fecha_creacion | date:'medium' }}</span>
+        </div>
+        <div class="col-md-8 mt-2" *ngIf="data.proveedor_nombre">
+            <span class="text-muted d-block small">Proveedor</span>
+            <span class="fw-bold">{{ data.proveedor_nombre }}</span>
+        </div>
+    </div>
+
+    <!-- Tabla de Detalles (Incluye los nuevos campos de paquetes) -->
+    <h5 class="text-primary mb-3"><i class="ti ti-box"></i> Productos Registrados</h5>
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover text-center align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th class="text-start">Producto</th>
+                    <th>Paquetes</th>
+                    <th>Unid x Paq</th>
+                    <th>Costo x Paq</th>
+                    <th>Cant. Total</th>
+                    <th>Subtotal</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Verificamos si no hay detalles -->
+                <tr *ngIf="!data.detalles || data.detalles.length === 0">
+                    <td colspan="6" class="text-muted py-3">No hay productos registrados en este movimiento.</td>
+                </tr>
+                
+                <!-- Iteramos los detalles -->
+                <tr *ngFor="let item of data.detalles">
+                    <td class="text-start fw-bold">{{ item.producto_nombre }}</td>
+                    
+                    <!-- NUEVOS CAMPOS -->
+                    <td>{{ item.cantidad_paquetes || 1 }}</td>
+                    <td>{{ item.unidades_por_paquete || 1 }}</td>
+                    <td>Bs. {{ item.costo_por_paquete | number:'1.2-2' }}</td>
+                    
+                    <!-- TOTALES DE LA LÍNEA -->
+                    <td class="fw-bold text-success">{{ item.cantidad }}</td>
+                    <td class="fw-bold text-primary">Bs. {{ item.subtotal | number:'1.2-2' }}</td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th colspan="5" class="text-end fs-6">TOTAL DEL MOVIMIENTO:</th>
+                    <th class="text-primary fs-5">Bs. {{ data.total_movimiento | number:'1.2-2' }}</th>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+
+<div mat-dialog-actions class="d-flex justify-content-end px-4 pb-3 m-0 border-top pt-3">
+    <button mat-button class="btn btn-secondary btn-round" mat-dialog-close>
+        <i class="ti ti-x"></i> Cerrar
+    </button>
+</div>

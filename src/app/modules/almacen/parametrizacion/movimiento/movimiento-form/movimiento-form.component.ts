@@ -18,6 +18,7 @@ import { MovimientoDetalleDTO } from 'src/app/models/movimientos/movimiento-deta
     styleUrls: ['./movimiento-form.component.scss']
 })
 export class MovimientoFormComponent implements OnInit {
+    public labelForm: string = 'Registrar Movimiento';
     public formCabecera!: FormGroup;
     public loading = false;
     public isEdit = false;
@@ -61,6 +62,7 @@ export class MovimientoFormComponent implements OnInit {
         if (this.data && this.data.movimiento) {
             this.isEdit = true;
             this.cargarDatos(this.data.movimiento);
+            this.labelForm = 'Actualizar Movimiento';
         }
 
     }

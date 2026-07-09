@@ -199,7 +199,7 @@ export class MaterialComponent implements OnInit, OnDestroy {
     public accionNuevo(): void {
         const dialogRef = this.dialog.open(MaterialFormComponent, {
             width: '750px',
-            maxHeight: '90vh',
+            maxHeight: '70vh',
             disableClose: true,
             data: {}
         });
