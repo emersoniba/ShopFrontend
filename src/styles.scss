@@ -23,105 +23,133 @@
         @import 'scss/themes/pages/page';
         // font
         @import 'scss/fonts/tabler-icons.min.css';
+
         html,
         body {
             height: 100%;
         }
-        
+
         body {
             margin: 0;
             font-family: Roboto, "Helvetica Neue", sans-serif;
         }
-        
+
         @import 'material-icons/iconfont/material-icons.css';
         @import 'ag-grid-community/styles/ag-grid.css';
         /* Quartz Theme Specific CSS */
-        
+
         @import 'ag-grid-community/styles/ag-theme-material.css';
+
         .pull-right {
             text-align: right;
         }
-        
+
         .mr-05 {
             margin-right: 0.5em !important;
         }
-        
+
         .ml-05 {
             margin-left: 0.5em !important;
         }
-        
+
         .mat-mdc-form-field-focus-overlay {
             background-color: white !important;
         }
-        
+
         .mat-mdc-form-field .mdc-text-field--filled {
             background-color: white !important;
         }
-        
+
         .mdc-text-field--filled {
             background-color: white !important;
         }
-        
+
         .mat-mdc-form-field-flex {
             background-color: white !important;
         }
-        
+
         .mat-mdc-select-panel {
             background-color: white !important;
         }
-        
+
         .mat-mdc-form-field .mat-mdc-form-field-focus-overlay {
             opacity: 0 !important;
         }
-        
+
         .br {
             border-right: 1px solid #ededed;
         }
-        
+
         .separator {
             margin-top: 0.8rem;
             border-bottom: 1px solid #e8e6e6;
             margin-bottom: 0rem;
         }
-        
+
         .btn-round {
             border-radius: 20px !important;
         }
-        
+
         .btn-space {
             margin-left: 0.3rem;
         }
-        
-         ::ng-deep .mat-mdc-dialog-container {
+
+        ::ng-deep .mat-mdc-dialog-container {
             width: 80%;
             height: 60%;
             max-width: 800px;
             max-height: 600px;
             margin: auto;
         }
-        
+
         @media (max-width: 600px) {
-             ::ng-deep .mat-mdc-dialog-container {
+            ::ng-deep .mat-mdc-dialog-container {
                 width: 95%;
                 height: 80%;
             }
         }
-        
+
         @media (max-width: 1024px) {
-             ::ng-deep .mat-mdc-dialog-container {
+            ::ng-deep .mat-mdc-dialog-container {
                 width: 85%;
                 height: 70%;
             }
         }
-        
+
         @media (min-width: 1025px) {
-             ::ng-deep .mat-mdc-dialog-container {
+            ::ng-deep .mat-mdc-dialog-container {
                 width: 70%;
                 height: 60%;
             }
         }
-        
+
         .mat-mdc-dialog-container .mdc-dialog__surface {
             border-radius: var(--mdc-dialog-container-shape, 4px);
             //margin-top: 70px !important;
+        }
+
+        /* =========================================================
+   MODO PUNTO DE VENTA (Ocultar elementos de la plantilla)
+   ========================================================= */
+        body.pos-fullscreen-mode {
+
+            /* 1. Ocultar la barra de migas de pan (Breadcrumb / Header) */
+            /* (Incluyo las clases más comunes de las plantillas Admin) */
+            app-breadcrumb,
+            .page-header,
+            .pc-breadcrumb,
+            .page-title {
+                display: none !important;
+            }
+
+            /* 2. Opcional: Hacer que el fondo principal de la página también se vuelva oscuro */
+            background-color: #f4f6f8 !important;
+
+            .pc-container,
+            .pc-content,
+            .content-wrapper {
+                background-color: transparent !important;
+                padding-top: 15px !important;
+                /* Subimos el componente para aprovechar el espacio extra */
+            }
         }

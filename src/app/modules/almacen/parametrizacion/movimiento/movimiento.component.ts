@@ -36,7 +36,7 @@ export class MovimientoComponent implements OnInit, OnDestroy {
 
     public gridOptions: GridOptions = {
         reactiveCustomComponents: true,
-        components: { actionCellRenderer: RendererComponent,MovimientoActionRendererComponent },
+        components: { actionCellRenderer: RendererComponent, MovimientoActionRendererComponent },
         context: { componentParent: this },
         rowModelType: 'clientSide',
         defaultColDef: { sortable: true, resizable: true, filter: true, floatingFilter: true }
@@ -50,13 +50,15 @@ export class MovimientoComponent implements OnInit, OnDestroy {
     public paginationNumberFormatter = (params: PaginationNumberFormatterParams) => params.value.toLocaleString();
 
     columnDefs: ColDef[] = [
-        { field: 'id', headerName: 'Opciones', 
-            filter: false, 
+        {
+            field: 'id', headerName: 'Opciones',
+            filter: false,
             minWidth: 160,
-             maxWidth: 160,
-              //cellRenderer: RendererComponent, 
-              cellRenderer: MovimientoActionRendererComponent,
-              pinned: 'left' },
+            maxWidth: 160,
+            //cellRenderer: RendererComponent, 
+            cellRenderer: MovimientoActionRendererComponent,
+            pinned: 'left'
+        },
         { field: 'id', headerName: 'Nro', filter: 'agNumberColumnFilter', maxWidth: 160 },
         {
             field: 'tipo_movimiento_nombre', headerName: 'Tipo', filter: 'agTextColumnFilter', minWidth: 150,
@@ -114,8 +116,9 @@ export class MovimientoComponent implements OnInit, OnDestroy {
 
     public accionNuevo(): void {
         const dialogRef = this.dialog.open(MovimientoFormComponent, {
-            width: '700px', // Un poco más ancho porque tendrá una tabla de productos adentro
-            maxHeight: '75vh',
+            width: '800px', // <-- El punto dulce perfecto
+            maxWidth: '100vw', // <-- Evita que el modal sea más grande que la pantalla en laptops pequeñas
+            maxHeight: '85vh',
             disableClose: true,
             data: {}
         });
@@ -142,8 +145,8 @@ export class MovimientoComponent implements OnInit, OnDestroy {
             if (esBorrador) {
                 // Abre el modal pasando los datos
                 const dialogRef = this.dialog.open(MovimientoFormComponent, {
-                    width: '700px', 
-                    maxHeight: '75vh', 
+                    width: '700px',
+                    maxHeight: '75vh',
                     disableClose: true,
                     data: { movimiento: data }
                 });

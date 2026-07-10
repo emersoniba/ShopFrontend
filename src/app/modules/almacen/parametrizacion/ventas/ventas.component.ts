@@ -1,5 +1,8 @@
 // src/app/components/ventas/ventas.component.ts
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, Renderer2, Inject } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+// ... el resto de tus importaciones (FormBuilder, etc) ...
+
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import Swal from 'sweetalert2';
@@ -14,7 +17,7 @@ import { VentasService } from 'src/app/services/ventas/ventas.services';
   templateUrl: './ventas.component.html',
   styleUrls: ['./ventas.component.scss']
 })
-export class VentasComponent implements OnInit {
+export class VentasComponent implements OnInit, OnDestroy {
   public productos: Producto[] = [];
   public productosFiltrados: Producto[] = [];
   public carrito: any[] = [];
@@ -24,30 +27,44 @@ export class VentasComponent implements OnInit {
   public metodosPago: any[] = [];
 
   public ventaForm!: FormGroup;
-  //public terminoBusqueda: string = '';
   public procesando: boolean = false;
-  // NUEVAS VARIABLES PARA LOS FILTROS
   public categoriasUnicas: string[] = ['Todos'];
   public categoriaSeleccionada: string = 'Todos';
   public terminoBusqueda: string = '';
+  public currentTime: Date = new Date();
+  public fechaEspanol: string = '';
+  public isDarkMode: boolean = false;
+  private timerSubscription: any;
 
   constructor(
     private fb: FormBuilder,
     private productoService: ProductoService,
     private almacenService: AlmacenService,
     private ventasService: VentasService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    // --- NUEVAS HERRAMIENTAS ---
+    private renderer: Renderer2,
+    @Inject(DOCUMENT) private document: Document
+
   ) { }
 
   ngOnInit(): void {
     this.initForm();
     this.cargarDatosBase();
+    // Iniciar el reloj para que se actualice cada segundo
+    this.actualizarReloj();
+    this.timerSubscription = setInterval(() => {
+      this.currentTime = new Date();
+    }, 1000);
+    // --- MAGIA: OCULTAR HEADER GLOBAL ---
+    // Le agregamos una clase al body de toda la página
+    this.renderer.addClass(this.document.body, 'pos-fullscreen-mode');
   }
 
   private initForm(): void {
     this.ventaForm = this.fb.group({
       cliente: [null, Validators.required],
-      almacen: [null, Validators.required], // La barra de donde salen las bebidas
+      almacen: [null, Validators.required],
       metodo_pago: [null, Validators.required]
     });
   }
@@ -98,15 +115,7 @@ export class VentasComponent implements OnInit {
       return coincideCategoria && coincideTexto;
     });
   }
-  // 
- /* public buscarProducto(event: any): void {
-    const termino = event.target.value.toLowerCase();
-    this.productosFiltrados = this.productos.filter(p =>
-      p.nombre.toLowerCase().includes(termino) ||
-      (p.categoria_nombre && p.categoria_nombre.toLowerCase().includes(termino))
-    );
-  }
-*/
+
   public agregarAlCarrito(producto: Producto): void {
     const stockTotal = Number(producto.stock_total || 0);
 
@@ -131,7 +140,7 @@ export class VentasComponent implements OnInit {
         nombre: producto.nombre,
         cantidad: 1,
         precio_unitario: Number(producto.precio_venta),
-        subtotal: Number(producto.precio_venta),       
+        subtotal: Number(producto.precio_venta),
         imagen: producto.imagen_principal,
         stock_maximo: stockTotal
       });
@@ -160,7 +169,7 @@ export class VentasComponent implements OnInit {
     this.carrito.splice(index, 1);
   }
 
- public get totalCarrito(): number {
+  public get totalCarrito(): number {
     return this.carrito.reduce((sum, item) => sum + Number(item.subtotal), 0);
   }
 
@@ -214,5 +223,28 @@ export class VentasComponent implements OnInit {
         this.procesando = false;
       }
     });
+  }
+  // === FUNCIÓN DEL TOGGLE (LUNA/SOL) ===
+  public toggleTheme(): void {
+    this.isDarkMode = !this.isDarkMode;
+  }
+  // === NUEVA FUNCIÓN PARA EL RELOJ ===
+  private actualizarReloj(): void {
+    this.currentTime = new Date();
+    // Forzamos el formato en Español (es-ES)
+    const opciones: Intl.DateTimeFormatOptions = { weekday: 'long', day: 'numeric', month: 'short', year: 'numeric' };
+    const fechaTraducida = this.currentTime.toLocaleDateString('es-ES', opciones);
+    // Ponemos la primera letra en mayúscula para que se vea elegante (Viernes en lugar de viernes)
+    this.fechaEspanol = fechaTraducida.charAt(0).toUpperCase() + fechaTraducida.slice(1);
+  }
+
+  ngOnDestroy(): void {
+    // Limpiar el reloj al salir de la pantalla para no consumir memoria
+    if (this.timerSubscription) {
+      clearInterval(this.timerSubscription);
+    }
+    // --- MAGIA: RESTAURAR HEADER GLOBAL ---
+    // Quitamos la clase al salir para que la tabla de Usuarios o Materiales siga viéndose normal
+    this.renderer.removeClass(this.document.body, 'pos-fullscreen-mode');
   }
 }
