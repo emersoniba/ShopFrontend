@@ -56,7 +56,6 @@ export class PersonalComponent implements OnInit, OnDestroy {
 			pinned: 'left'
 		},
 		{ field: 'username', headerName: 'Usuario', filter: true, minWidth: 150, floatingFilter: true },
-		{ field: 'email', headerName: 'Correo', filter: true, minWidth: 200, floatingFilter: true },
 		{
 			field: 'ci',
 			headerName: 'CI',
@@ -79,36 +78,12 @@ export class PersonalComponent implements OnInit, OnDestroy {
 			}
 		},
 		{
-			field: 'cargo',
-			headerName: 'Cargo',
-			filter: true,
-			minWidth: 180,
-			floatingFilter: true,
-			valueGetter: (params) => params.data?.persona?.cargo || 'Sin cargo'
-		},
-		{
 			field: 'telefono',
 			headerName: 'Teléfono',
 			filter: true,
 			minWidth: 130,
 			floatingFilter: true,
 			valueGetter: (params) => params.data?.persona?.telefono || 'N/A'
-		},
-		{
-			field: 'unidad',
-			headerName: 'Unidad',
-			filter: true,
-			minWidth: 180,
-			floatingFilter: true,
-			valueGetter: (params) => params.data?.persona?.unidad || 'N/A'
-		},
-		{
-			field: 'direccion',
-			headerName: 'Dirección',
-			filter: true,
-			minWidth: 250,
-			floatingFilter: true,
-			valueGetter: (params) => params.data?.persona?.direccion || 'N/A'
 		},
 		{
 			headerName: 'Roles',

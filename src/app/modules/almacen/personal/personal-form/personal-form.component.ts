@@ -42,11 +42,7 @@ export class PersonalFormComponent implements OnInit, OnDestroy {
             nombres: ['', Validators.required],
             apellido_paterno: [''],
             apellido_materno: [''],
-            cargo: ['', Validators.required],
             telefono: [''],
-            correo: ['', [Validators.email]],
-            unidad: [''],
-            direccion: [''],
 
             // Datos de Usuario
             username: ['', [Validators.required, Validators.minLength(5)]],
@@ -97,11 +93,7 @@ export class PersonalFormComponent implements OnInit, OnDestroy {
             nombres: usuario.persona?.nombres || '',
             apellido_paterno: usuario.persona?.apellido_paterno || '',
             apellido_materno: usuario.persona?.apellido_materno || '',
-            cargo: usuario.persona?.cargo || '',
             telefono: usuario.persona?.telefono || '',
-            correo: usuario.persona?.correo || '',
-            unidad: usuario.persona?.unidad || '',
-            direccion: usuario.persona?.direccion || '',
             username: usuario.username,
             email: usuario.email,
             rolesSeleccionados: usuario.roles?.map(r => r.id) || []
@@ -129,12 +121,7 @@ export class PersonalFormComponent implements OnInit, OnDestroy {
                     nombres: persona.nombres || '',
                     apellido_paterno: persona.apellido_paterno || '',
                     apellido_materno: persona.apellido_materno || '',
-                    cargo: persona.cargo || '',
                     telefono: persona.telefono || '',
-                    correo: persona.correo || '',
-                    unidad: persona.unidad || '',
-                    direccion: persona.direccion || '',
-                    email: persona.correo || '' // El email del usuario será el de la persona
                 });
 
                 this.toastr.success('Persona encontrada', 'Éxito');
@@ -183,11 +170,7 @@ export class PersonalFormComponent implements OnInit, OnDestroy {
             nombres: this.formRegistro.get('nombres')?.value,
             apellido_paterno: this.formRegistro.get('apellido_paterno')?.value,
             apellido_materno: this.formRegistro.get('apellido_materno')?.value,
-            cargo: this.formRegistro.get('cargo')?.value,
             telefono: this.formRegistro.get('telefono')?.value,
-            correo: this.formRegistro.get('correo')?.value,
-            unidad: this.formRegistro.get('unidad')?.value,
-            direccion: this.formRegistro.get('direccion')?.value
         };
 
         const observablePersona = this.personaEncontrada

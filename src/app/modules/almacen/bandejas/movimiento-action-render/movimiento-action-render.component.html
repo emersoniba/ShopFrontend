@@ -1,13 +1,11 @@
- <div class="d-flex justify-content-center align-items-center">
-        <button type="button" class="btn btn-sm btn-info btn-icon me-1" (click)="onClick('view')" matTooltip="Ver Detalles">
-            <i class="ti ti-eye"></i>
-        </button>
+	<button class="btn btn-sm btn-info btn-round" (click)="onClick('view')" matTooltip="Ver Detalles">
+		<i class="ti ti-eye fs-5"></i>
+	</button>
+	<button class="btn btn-warning btn-sm btn-round" (click)="onClick('edit')" matTooltip="Editar Registro">
+		<i class="ti ti-edit fs-5"></i>
+    </button>
 
-        <button type="button" class="btn btn-sm btn-warning btn-icon me-1" (click)="onClick('edit')" matTooltip="Editar">
-            <i class="ti ti-pencil"></i>
-        </button>
-        
-        <button type="button" class="btn btn-sm btn-danger btn-icon" (click)="onClick('delete')" matTooltip="Eliminar / Anular">
-            <i class="ti ti-trash"></i>
-        </button>
-    </div>
+	<button class="btn btn-danger btn-sm btn-round" (click)="onClick('delete')" matTooltip="Eliminar / Anular">
+		<i class="ti ti-trash fs-5"></i>
+	</button>
+

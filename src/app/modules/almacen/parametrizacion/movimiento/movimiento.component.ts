@@ -52,8 +52,8 @@ export class MovimientoComponent implements OnInit, OnDestroy {
     columnDefs: ColDef[] = [
         { field: 'id', headerName: 'Opciones', 
             filter: false, 
-            minWidth: 140,
-             maxWidth: 140,
+            minWidth: 160,
+             maxWidth: 160,
               //cellRenderer: RendererComponent, 
               cellRenderer: MovimientoActionRendererComponent,
               pinned: 'left' },
