@@ -131,8 +131,8 @@ export class MovimientoComponent implements OnInit, OnDestroy {
         const esAnulado = data.estado_nombre.toLowerCase() === 'anulado';
         if (action?.toLowerCase() === 'view' || action?.toLowerCase() === 'ver') {
             this.dialog.open(MovimientoDetalleModalComponent, {
-                width: '850px',
-                maxHeight: '90vh',
+                width: '700px',
+                maxHeight: '75vh',
                 data: data // Pasamos toda la fila, incluyendo los detalles anidados
             });
             return; // Salimos de la función para que no evalúe los otros casos
