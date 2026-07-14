@@ -1,122 +1,95 @@
-<div class="auth-wrapper">
-    <!-- Imagen de fondo -->
-    <div class="auth-background">
-        <img src="/assets/images/fondo-izquierdo.jpg" alt="Background" class="bg-image">
-        <div class="bg-overlay"></div>
+<!-- Envolvemos todo y le pasamos la clase light-theme si es necesario -->
+<div class="login-layout" [class.light-theme]="!isDarkMode">
+    
+    <!-- LADO IZQUIERDO: Branding y Logo -->
+    <div class="login-brand d-none d-lg-flex">
+        <div class="brand-overlay"></div>
+        <div class="brand-content text-center">
+            <img src="/assets/images/logo_praga.jpeg" alt="Praga Logo" class="brand-logo shadow-lg">
+            <h2 class="mt-4 brand-title fw-light" style="letter-spacing: 2px;">SISTEMA POS & GESTIÓN</h2>
+        </div>
     </div>
 
-    <!-- Contenido del login -->
-    <div class="auth-container">
-        <div class="auth-card">
-            <!-- Logo -->
-            <div class="logo-container">
-                <img src="/assets/images/almacen2.png" alt="Logo" class="logo-img">
+    <!-- LADO DERECHO: Formulario -->
+    <div class="login-form-container">
+        
+        <!-- NUEVO BOTÓN TOGGLE (Píldora Animada) -->
+        <div class="custom-theme-switch" (click)="toggleTheme()" title="Cambiar Tema">
+            <div class="switch-track">
+                <!-- Sol (Visible en modo claro) -->
+                <i class="ti ti-sun icon-sun"></i>
+                <!-- Luna (Visible en modo oscuro) -->
+                <i class="ti ti-moon icon-moon"></i>
+                <!-- El círculo que se mueve -->
+                <div class="switch-thumb"></div>
             </div>
+        </div>
 
-            <!-- Título principal -->
-            <div class="title-container">
-                <h1 class="main-title">Plataforma de Gestión de Peticiones</h1>
-                <div class="title-underline"></div>
+        <div class="login-form-wrapper">
+            
+            <!-- Título -->
+            <div class="mb-5 text-center text-lg-start">
+                <img src="/assets/images/logo_praga.jpeg" alt="Logo" class="logo-mobile d-block d-lg-none mx-auto mb-3">
+                <h2 class="fw-bold form-main-title mb-2">Bienvenido de nuevo</h2>
+                <p class="form-subtitle">Ingrese sus credenciales para acceder.</p>
             </div>
-
-            <!-- Subtítulo -->
-            <p class="subtitle">Ingrese sus datos</p>
 
             <form [formGroup]="formAuth" (ngSubmit)="authLogin()">
-                <!-- Mensaje de error del backend -->
-                <div *ngIf="errorMessage" class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <i class="ti ti-alert-circle me-2"></i> {{ errorMessage }}
-                    <button type="button" class="btn-close" (click)="errorMessage = null"></button>
+                
+                <!-- Alertas -->
+                <div *ngIf="errorMessage" class="alert alert-danger custom-alert border-0 p-3 mb-4 d-flex align-items-center">
+                    <i class="ti ti-alert-circle fs-4 me-3"></i>
+                    <div>{{ errorMessage }}</div>
+                    <button type="button" class="btn-close btn-close-white ms-auto" (click)="errorMessage = null"></button>
                 </div>
 
-                <!-- Mensaje de intentos restantes -->
-                <div *ngIf="remainingAttempts !== null && remainingAttempts > 0 && !errorMessage" class="alert alert-warning alert-dismissible fade show">
-                    <i class="ti ti-alert-triangle me-2"></i> Intentos restantes: {{ remainingAttempts }}
-                    <button type="button" class="btn-close" (click)="remainingAttempts = null"></button>
+                <div *ngIf="remainingAttempts !== null && remainingAttempts > 0 && !errorMessage" class="alert alert-warning custom-alert border-0 p-3 mb-4 d-flex align-items-center">
+                    <i class="ti ti-alert-triangle fs-4 me-3"></i>
+                    <div>Intentos restantes: {{ remainingAttempts }}</div>
+                    <button type="button" class="btn-close btn-close-white ms-auto" (click)="remainingAttempts = null"></button>
                 </div>
 
-                <!-- Campo Usuario -->
-                <div class="form-group">
-                    <label class="form-label">
-                        Cuenta de usuario
-                        <span class="text-danger">*</span>
-                    </label>
-                    <div class="input-group">
-                        <span class="input-icon"><i class="ti ti-user"></i></span>
+                <!-- Input Usuario -->
+                <div class="form-group mb-4">
+                    <label class="form-label custom-label mb-2">Usuario <span class="text-danger">*</span></label>
+                    <div class="input-group input-group-lg custom-input-group">
+                        <span class="input-group-text custom-icon"><i class="ti ti-user"></i></span>
                         <input type="text" 
-                               class="form-control" 
-                               [class.is-invalid]="formAuth.get('username')?.invalid && (formAuth.get('username')?.touched || formAuth.get('username')?.dirty)"
+                               class="form-control custom-input" 
+                               [class.is-invalid]="formAuth.get('username')?.invalid && formAuth.get('username')?.touched"
                                formControlName="username"
-                               (input)="errorMessage = null"
-                               placeholder="Ingrese su usuario">
-                    </div>
-                    <!-- Mensajes de error para username -->
-                    <div class="invalid-feedback d-block" *ngIf="formAuth.get('username')?.invalid && (formAuth.get('username')?.touched || formAuth.get('username')?.dirty)">
-                        <span *ngIf="formAuth.get('username')?.hasError('required')">
-                            <i class="ti ti-alert-circle me-1"></i> Este campo es requerido
-                        </span>
-                        <span *ngIf="formAuth.get('username')?.hasError('minlength')">
-                            <i class="ti ti-alert-circle me-1"></i> Mínimo {{ formAuth.get('username')?.getError('minlength')?.requiredLength }} caracteres
-                        </span>
-                        <span *ngIf="formAuth.get('username')?.hasError('maxlength')">
-                            <i class="ti ti-alert-circle me-1"></i> Máximo {{ formAuth.get('username')?.getError('maxlength')?.requiredLength }} caracteres
-                        </span>
+                               placeholder="ej. cajero1">
                     </div>
                 </div>
 
-                <!-- Campo Contraseña -->
-                <div class="form-group">
-                    <label class="form-label">
-                        Contraseña
-                        <span class="text-danger">*</span>
-                    </label>
-                    <div class="input-group">
-                        <span class="input-icon"><i class="ti ti-lock"></i></span>
+                <!-- Input Contraseña -->
+                <div class="form-group mb-5">
+                    <label class="form-label custom-label mb-2">Contraseña <span class="text-danger">*</span></label>
+                    <div class="input-group input-group-lg custom-input-group">
+                        <span class="input-group-text custom-icon"><i class="ti ti-lock"></i></span>
                         <input type="password" 
-                               class="form-control" 
-                               [class.is-invalid]="formAuth.get('password')?.invalid && (formAuth.get('password')?.touched || formAuth.get('password')?.dirty)"
+                               class="form-control custom-input" 
+                               [class.is-invalid]="formAuth.get('password')?.invalid && formAuth.get('password')?.touched"
                                formControlName="password"
-                               (input)="errorMessage = null"
-                               placeholder="Ingrese su contraseña">
-                    </div>
-                    <!-- Mensajes de error para password -->
-                    <div class="invalid-feedback d-block" *ngIf="formAuth.get('password')?.invalid && (formAuth.get('password')?.touched || formAuth.get('password')?.dirty)">
-                        <span *ngIf="formAuth.get('password')?.hasError('required')">
-                            <i class="ti ti-alert-circle me-1"></i> Este campo es requerido
-                        </span>
-                        <span *ngIf="formAuth.get('password')?.hasError('minlength')">
-                            <i class="ti ti-alert-circle me-1"></i> Mínimo {{ formAuth.get('password')?.getError('minlength')?.requiredLength }} caracteres
-                        </span>
-                        <span *ngIf="formAuth.get('password')?.hasError('maxlength')">
-                            <i class="ti ti-alert-circle me-1"></i> Máximo {{ formAuth.get('password')?.getError('maxlength')?.requiredLength }} caracteres
-                        </span>
+                               placeholder="••••••••">
                     </div>
                 </div>
 
-                <!-- Botón Ingresar -->
-                <button type="submit" 
-                        class="btn-login" 
-                        [disabled]="formAuth.invalid || isLoading">
+                <!-- Botón -->
+                <button type="submit" class="btn btn-primary btn-lg w-100 fw-bold rounded-3 submit-btn" [disabled]="formAuth.invalid || isLoading">
                     <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>
                     <i *ngIf="!isLoading" class="ti ti-login me-2"></i>
-                    {{ isLoading ? 'INGRESANDO...' : 'INGRESAR' }}
+                    {{ isLoading ? 'VERIFICANDO...' : 'INICIAR SESIÓN' }}
                 </button>
             </form>
 
             <!-- Footer -->
-            <div class="auth-footer">
-                <div class="footer-divider"></div>
-                <!--
-                    <p class="copyright">
-                        © {{ fecha }} | Unidad de Desarrollo Tecnológico e Información - UDTI<br>
-                        <span class="ministry">Ministerio de Obras Públicas, Servicios y Vivienda</span>
-                    </p>
-                -->
-                <p class="copyright">
-                    © {{ fecha }} | Unidad de Desarrollo Tecnológico e Información - UDTI<br>
-                    <span class="ministry">Emerson Ibañez</span>
-                </p>
+            <div class="mt-auto pt-5 text-center custom-footer small">
+                <hr class="footer-divider mb-3">
+                <p class="mb-1">© {{ fecha }} | Unidad de Desarrollo Tecnológico - UDTI</p>
+                <p class="mb-0 fw-bold highlight-footer-text">Praga Disco & Karaoke by Emerson Ibañez</p>
             </div>
+            
         </div>
     </div>
 </div>

@@ -18,7 +18,7 @@ export default class LoginComponent implements OnInit, OnDestroy {
     public errorMessage: string | null = null;
     public remainingAttempts: number | null = null;
     public countdownInterval: any = null;
-
+    public isDarkMode: boolean =true;
     constructor(
         private fb: FormBuilder,
         private toastr: ToastrService,
@@ -122,7 +122,9 @@ export default class LoginComponent implements OnInit, OnDestroy {
             }
         }
     }
-
+    public toggleTheme(){
+        this.isDarkMode = !this.isDarkMode;
+    }
     startCountdown(waitMinutes: number) {
         let totalSeconds = waitMinutes * 60;
         
