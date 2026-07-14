@@ -13,7 +13,7 @@
     <!-- LADO DERECHO: Formulario -->
     <div class="login-form-container">
         
-        <!-- NUEVO BOTÓN TOGGLE (Píldora Animada) -->
+        <!-- BOTÓN TOGGLE (Píldora Animada) -->
         <div class="custom-theme-switch" (click)="toggleTheme()" title="Cambiar Tema">
             <div class="switch-track">
                 <!-- Sol (Visible en modo claro) -->
@@ -28,15 +28,15 @@
         <div class="login-form-wrapper">
             
             <!-- Título -->
-            <div class="mb-5 text-center text-lg-start">
+            <div class="mb-4 text-center text-lg-start">
                 <img src="/assets/images/logo_praga.jpeg" alt="Logo" class="logo-mobile d-block d-lg-none mx-auto mb-3">
                 <h2 class="fw-bold form-main-title mb-2">Bienvenido de nuevo</h2>
-                <p class="form-subtitle">Ingrese sus credenciales para acceder.</p>
+                <p class="form-subtitle">Ingrese sus credenciales para acceder a su caja.</p>
             </div>
 
             <form [formGroup]="formAuth" (ngSubmit)="authLogin()">
                 
-                <!-- Alertas -->
+                <!-- Alertas Globales -->
                 <div *ngIf="errorMessage" class="alert alert-danger custom-alert border-0 p-3 mb-4 d-flex align-items-center">
                     <i class="ti ti-alert-circle fs-4 me-3"></i>
                     <div>{{ errorMessage }}</div>
@@ -56,9 +56,22 @@
                         <span class="input-group-text custom-icon"><i class="ti ti-user"></i></span>
                         <input type="text" 
                                class="form-control custom-input" 
-                               [class.is-invalid]="formAuth.get('username')?.invalid && formAuth.get('username')?.touched"
+                               [class.is-invalid]="formAuth.get('username')?.invalid && (formAuth.get('username')?.touched || formAuth.get('username')?.dirty)"
                                formControlName="username"
+                               (input)="errorMessage = null"
                                placeholder="ej. cajero1">
+                    </div>
+                    <!-- VALIDACIONES DE USUARIO -->
+                    <div class="invalid-feedback d-block mt-2" *ngIf="formAuth.get('username')?.invalid && (formAuth.get('username')?.touched || formAuth.get('username')?.dirty)">
+                        <span class="d-block mb-1" *ngIf="formAuth.get('username')?.hasError('required')">
+                            <i class="ti ti-alert-circle me-1"></i> Este campo es requerido
+                        </span>
+                        <span class="d-block mb-1" *ngIf="formAuth.get('username')?.hasError('minlength')">
+                            <i class="ti ti-alert-circle me-1"></i> Mínimo {{ formAuth.get('username')?.getError('minlength')?.requiredLength }} caracteres
+                        </span>
+                        <span class="d-block mb-1" *ngIf="formAuth.get('username')?.hasError('maxlength')">
+                            <i class="ti ti-alert-circle me-1"></i> Máximo {{ formAuth.get('username')?.getError('maxlength')?.requiredLength }} caracteres
+                        </span>
                     </div>
                 </div>
 
@@ -69,9 +82,22 @@
                         <span class="input-group-text custom-icon"><i class="ti ti-lock"></i></span>
                         <input type="password" 
                                class="form-control custom-input" 
-                               [class.is-invalid]="formAuth.get('password')?.invalid && formAuth.get('password')?.touched"
+                               [class.is-invalid]="formAuth.get('password')?.invalid && (formAuth.get('password')?.touched || formAuth.get('password')?.dirty)"
                                formControlName="password"
+                               (input)="errorMessage = null"
                                placeholder="••••••••">
+                    </div>
+                    <!-- VALIDACIONES DE CONTRASEÑA -->
+                    <div class="invalid-feedback d-block mt-2" *ngIf="formAuth.get('password')?.invalid && (formAuth.get('password')?.touched || formAuth.get('password')?.dirty)">
+                        <span class="d-block mb-1" *ngIf="formAuth.get('password')?.hasError('required')">
+                            <i class="ti ti-alert-circle me-1"></i> Este campo es requerido
+                        </span>
+                        <span class="d-block mb-1" *ngIf="formAuth.get('password')?.hasError('minlength')">
+                            <i class="ti ti-alert-circle me-1"></i> Mínimo {{ formAuth.get('password')?.getError('minlength')?.requiredLength }} caracteres
+                        </span>
+                        <span class="d-block mb-1" *ngIf="formAuth.get('password')?.hasError('maxlength')">
+                            <i class="ti ti-alert-circle me-1"></i> Máximo {{ formAuth.get('password')?.getError('maxlength')?.requiredLength }} caracteres
+                        </span>
                     </div>
                 </div>
 
@@ -84,7 +110,7 @@
             </form>
 
             <!-- Footer -->
-            <div class="mt-auto pt-5 text-center custom-footer small">
+            <div class="mt-auto pt-4 text-center custom-footer small">
                 <hr class="footer-divider mb-3">
                 <p class="mb-1">© {{ fecha }} | Unidad de Desarrollo Tecnológico - UDTI</p>
                 <p class="mb-0 fw-bold highlight-footer-text">Praga Disco & Karaoke by Emerson Ibañez</p>
